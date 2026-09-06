@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genie Light — Commercial & Architectural Lighting (Ciseco Edition)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       CISECO DESIGN SYSTEM & TOKENS
+       ========================================================================== */
+    :root {
+      --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Ciseco Light Mode Colors */
+      --bg-body: #FFFFFF;
+      --bg-surface: #F8FAFC;
+      --bg-surface-alt: #F1F5F9;
+      --border-color: #E2E8F0;
+      --border-hover: #CBD5E1;
+
+      --text-heading: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --text-subtle: #94A3B8;
+
+      /* Genie Light Brand & Ciseco Accents */
+      --brand-primary: #00A859;
+      --brand-primary-hover: #008f4c;
+      --brand-primary-light: #E6F7EF;
+      --brand-primary-rgb: 0, 168, 89;
+
+      --accent-pastel-green: #E3FFE6;
+      --accent-pastel-blue: #E0F2FE;
+      --accent-pastel-amber: #FEF3C7;
+      --accent-pastel-rose: #FFE4E6;
+      --accent-pastel-purple: #F3E8FF;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-2xl: 32px;
+      --radius-full: 9999px;
+    }
+
+    html.dark {
+      --bg-body: #0B111E;
+      --bg-surface: #111827;
+      --bg-surface-alt: #1E293B;
+      --border-color: #1F293D;
+      --border-hover: #334155;
+
+      --text-heading: #F8FAFC;
+      --text-body: #CBD5E1;
+      --text-muted: #94A3B8;
+      --text-subtle: #64748B;
+
+      --brand-primary-light: rgba(0, 168, 89, 0.15);
+      --accent-pastel-green: #0D2818;
+      --accent-pastel-blue: #0C283B;
+      --accent-pastel-amber: #312108;
+      --accent-pastel-rose: #331118;
+      --accent-pastel-purple: #231138;
+    }
+
+    /* Base Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-body);
+      line-height: 1.6;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--text-heading);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ==========================================================================
+       HEADER & TOP UTILITY BAR (CISECO STYLE)
+       ========================================================================== */
+    .top-banner {
+      background: var(--bg-surface-alt);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.45rem 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .top-banner-pill {
+      background: var(--brand-primary-light);
+      color: var(--brand-primary);
+      padding: 0.15rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+
+    .top-banner-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s ease;
+    }
+
+    html.dark .site-header {
+      background: rgba(11, 17, 30, 0.95);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      gap: 2rem;
+    }
+
+    /* Ciseco Brand Logo */
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .brand-symbol {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #0F172A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    html.dark .brand-symbol {
+      background: var(--brand-primary);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-primary);
+    }
+
+    /* Ciseco Navigation Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .nav-item-link {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-body);
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.15s ease;
+    }
+
+    .nav-item-link:hover, .nav-item-link.active {
+      color: var(--brand-primary);
+    }
+
+    .nav-badge-new {
+      background: #EF4444;
+      color: #FFFFFF;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-full);
+      line-height: 1;
+    }
+
+    /* Header Action Buttons (Ciseco round icon buttons) */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .round-icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-heading);
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .round-icon-btn:hover {
+      background: var(--bg-surface-alt);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    .round-icon-btn .cart-count-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-full);
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 168, 89, 0.4);
+    }
+
+    .btn-pill-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.65rem;
+      border-radius: var(--radius-full);
+      background: #0F172A;
+      color: #FFFFFF;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    html.dark .btn-pill-primary {
+      background: var(--brand-primary);
+      color: #061B12;
+    }
+
+    .btn-pill-primary:hover {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(var(--brand-primary-rgb), 0.35);
+    }
+
+    .btn-pill-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-pill-secondary:hover {
+      background: var(--bg-surface-alt);
+      border-color: var(--border-hover);
+    }
+
+    /* ==========================================================================
+       HERO SECTION (CISECO SOFT PASTEL CONTAINER)
+       ========================================================================== */
+    .hero-wrap {
+      padding: 2.5rem 0 4rem;
+    }
+
+    .hero-card-banner {
+      background-color: var(--accent-pastel-green);
+      border-radius: var(--radius-2xl);
+      padding: 4.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-decorative-moon {
+      position: absolute;
+      right: -40px;
+      bottom: -60px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--brand-primary-rgb), 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-subheading {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--brand-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-heading {
+      font-size: 3.6rem;
+      font-weight: 700;
+      line-height: 1.12;
+      color: #0F172A;
+      margin-bottom: 1.5rem;
+    }
+
+    html.dark .hero-heading {
+      color: #F8FAFC;
+    }
+
+    .hero-paragraph {
+      font-size: 1.1rem;
+      color: #475569;
+      line-height: 1.7;
+      margin-bottom: 2.25rem;
+      max-width: 580px;
+    }
+
+    html.dark .hero-paragraph {
+      color: #CBD5E1;
+    }
+
+    .hero-button-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .hero-trust-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .hero-trust-row {
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-trust-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trust-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1;
+    }
+
+    html.dark .trust-val {
+      color: #F8FAFC;
+    }
+
+    .trust-lbl {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748B;
+      margin-top: 0.35rem;
+    }
+
+    /* Hero Right Visual: Ciseco Product Presentation Card */
+    .hero-spotlight-box {
+      background: var(--bg-body);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .spotlight-tag {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: #0F172A;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    html.dark .spotlight-tag {
+      background: var(--brand-primary);
+      color: #061B12;
+    }
+
+    .spotlight-art-stage {
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .spotlight-glow {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--brand-primary-rgb), 0.25) 0%, transparent 70%);
+      filter: blur(20px);
+    }
+
+    .spotlight-luminaire-svg {
+      width: 140px;
+      height: 140px;
+      z-index: 2;
+    }
+
+    .spotlight-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .spotlight-category {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Ciseco Color / CCT Dot Swatches */
+    .cct-swatches {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cct-swatch-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .cct-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: var(--radius-full);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      position: relative;
+    }
+
+    .cct-dot:hover {
+      transform: scale(1.15);
+    }
+
+    .cct-dot.active {
+      border-color: #0F172A;
+      transform: scale(1.15);
+    }
+
+    html.dark .cct-dot.active {
+      border-color: #FFFFFF;
+    }
+
+    .cct-dot-3000 { background-color: #F59E0B; } /* Warm Amber */
+    .cct-dot-4000 { background-color: #E2E8F0; } /* Neutral White */
+    .cct-dot-6500 { background-color: #38BDF8; } /* Cool Daylight */
+
+    .spotlight-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .spotlight-price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    /* ==========================================================================
+       CISECO "DISCOVER MORE" PASTEL CATEGORY CARDS
+       ========================================================================== */
+    .categories-section {
+      padding: 5rem 0 3rem;
+    }
+
+    .section-title-wrap {
+      margin-bottom: 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    .section-main-heading {
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .section-desc-subtle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .category-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .ciseco-cat-card {
+      border-radius: var(--radius-2xl);
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .ciseco-cat-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cat-card-1 { background-color: var(--accent-pastel-green); }
+    .cat-card-2 { background-color: var(--accent-pastel-blue); }
+    .cat-card-3 { background-color: var(--accent-pastel-amber); }
+    .cat-card-4 { background-color: var(--accent-pastel-purple); }
+
+    .cat-card-badge {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+
+    html.dark .cat-card-badge {
+      color: #94A3B8;
+    }
+
+    .cat-card-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.25;
+      margin-bottom: 1.5rem;
+    }
+
+    html.dark .cat-card-title {
+      color: #F8FAFC;
+    }
+
+    .cat-card-btn {
+      align-self: flex-start;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius-full);
+      background: #FFFFFF;
+      color: #0F172A;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+
+    html.dark .cat-card-btn {
+      background: #1E293B;
+      color: #FFFFFF;
+    }
+
+    .ciseco-cat-card:hover .cat-card-btn {
+      background: #0F172A;
+      color: #FFFFFF;
+    }
+
+    html.dark .ciseco-cat-card:hover .cat-card-btn {
+      background: var(--brand-primary);
+      color: #061B12;
+    }
+
+    /* ==========================================================================
+       PRODUCT GRID & PARENT/SUB-PRODUCT ARCHITECTURE
+       ========================================================================== */
+    .products-section {
+      padding: 4rem 0 5rem;
+    }
+
+    .product-filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .tab-pill {
+      padding: 0.6rem 1.35rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-body);
+      transition: all 0.15s ease;
+    }
+
+    .tab-pill:hover {
+      background: var(--bg-surface-alt);
+      color: var(--text-heading);
+    }
+
+    .tab-pill.active {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-color: #0F172A;
+    }
+
+    html.dark .tab-pill.active {
+      background: var(--brand-primary);
+      color: #061B12;
+      border-color: var(--brand-primary);
+    }
+
+    .ciseco-product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+      gap: 2rem;
+    }
+
+    .ciseco-product-card {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-image-container {
+      background: var(--bg-surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      transition: all 0.25s ease;
+    }
+
+    .ciseco-product-card:hover .product-image-container {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-hover);
+    }
+
+    .card-badge-top-left {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-badge-top-right {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      color: #FFFFFF;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .product-svg-icon {
+      width: 100px;
+      height: 100px;
+      transition: transform 0.25s ease;
+    }
+
+    .ciseco-product-card:hover .product-svg-icon {
+      transform: scale(1.08);
+    }
+
+    /* Floating Quick View Action on Image Hover */
+    .floating-quick-btn {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    html.dark .floating-quick-btn {
+      background: var(--brand-primary);
+      color: #061B12;
+    }
+
+    .product-image-container:hover .floating-quick-btn {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .product-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .product-brand-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .product-specs-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+
+    .product-name-heading {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      line-height: 1.35;
+      color: var(--text-heading);
+    }
+
+    .variant-count-line {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .product-pricing-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+
+    .price-tag-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .price-num {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .price-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .btn-card-datasheet {
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-body);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .btn-card-datasheet:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+      background: var(--brand-primary-light);
+    }
+
+    /* ==========================================================================
+       HOW IT WORKS (4 PILLARS - CISECO STYLE)
+       ========================================================================== */
+    .how-it-works-section {
+      padding: 5rem 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-badge-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-full);
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: var(--brand-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+
+    .step-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       NATIONAL CASE STUDIES (AIRPORTS, TUNNELS, PETROJET)
+       ========================================================================== */
+    .case-studies-section {
+      padding: 5rem 0;
+    }
+
+    .case-study-hero-card {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: var(--radius-2xl);
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3.5rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .cs-tag {
+      background: var(--brand-primary);
+      color: #061B12;
+      padding: 0.25rem 0.85rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      margin-bottom: 1.25rem;
+    }
+
+    .cs-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      color: #FFFFFF;
+    }
+
+    .cs-desc {
+      font-size: 1.05rem;
+      color: #94A3B8;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .cs-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cs-metric-box strong {
+      font-size: 1.4rem;
+      color: #FFFFFF;
+      display: block;
+      font-family: var(--font-mono);
+    }
+
+    .cs-metric-box span {
+      font-size: 0.75rem;
+      color: #94A3B8;
+      text-transform: uppercase;
+    }
+
+    /* Small case studies grid underneath */
+    .case-studies-subgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      margin-top: 2rem;
+    }
+
+    .sub-cs-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .sub-cs-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
+    }
+
+    .sub-cs-sector {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub-cs-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .sub-cs-summary {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .sub-cs-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+
+    .sub-cs-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-body);
+    }
+
+    /* ==========================================================================
+       OFFICIAL PARTNER BRANDS (AUTH DISTRIBUTOR)
+       ========================================================================== */
+    .brands-section {
+      padding: 4rem 0;
+      background: var(--bg-surface-alt);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brands-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem 3rem;
+    }
+
+    .brand-item-card {
+      padding: 0.6rem 1.25rem;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      color: var(--text-heading);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+
+    .brand-item-card:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       SHOWROOMS & CONTACT (DOWNTOWN CAIRO & ROSHDY HQ)
+       ========================================================================== */
+    .locations-section {
+      padding: 5rem 0;
+    }
+
+    .locations-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .loc-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-2xl);
+      padding: 2.5rem;
+      position: relative;
+    }
+
+    .loc-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      background: var(--brand-primary-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 1rem;
+    }
+
+    .loc-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .loc-address {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .loc-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.92rem;
+    }
+
+    /* ==========================================================================
+       CISECO FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      padding: 4.5rem 0 2.5rem;
+    }
+
+    .footer-columns-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .footer-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-top: 1rem;
+      max-width: 340px;
+    }
+
+    .footer-heading {
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      color: var(--text-heading);
+    }
+
+    .footer-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .footer-menu a {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .footer-menu a:hover {
+      color: var(--brand-primary);
+    }
+
+    .footer-legal-bar {
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-subtle);
+    }
+
+    /* ==========================================================================
+       INTERACTIVE QUICK SPEC & DATASHEET MODAL (CISECO ROUNDED STYLE)
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--bg-body);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--border-color);
+      max-width: 840px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.25rem;
+      box-shadow: var(--shadow-xl);
+      animation: popIn 0.2s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.97); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+
+    .modal-close-btn:hover {
+      background: var(--bg-surface-alt);
+      color: var(--text-heading);
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1.5rem 0;
+    }
+
+    .spec-table th, .spec-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .spec-table th {
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .spec-table td {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+
+    .btn-download-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      background: var(--brand-primary-light);
+      color: var(--brand-primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid rgba(var(--brand-primary-rgb), 0.2);
+    }
+
+    .btn-download-pill:hover {
+      background: var(--brand-primary);
+      color: #FFFFFF;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-card-banner {
+        grid-template-columns: 1fr;
+        padding: 3rem 2rem;
+      }
+      .category-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .case-study-hero-card {
+        grid-template-columns: 1fr;
+        padding: 2.5rem;
+      }
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .locations-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-columns-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-banner {
+        display: none;
+      }
+      .nav-links {
+        display: none;
+      }
+      .hero-heading {
+        font-size: 2.4rem;
+      }
+      .category-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .case-studies-subgrid {
+        grid-template-columns: 1fr;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-columns-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       CISECO TOP UTILITY BAR
+       ======================================================================== -->
+  <div class="top-banner">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <div class="top-banner-left">
+        <span class="top-banner-pill">Official Agent</span>
+        <span>Authorized distributor of Philips, Schneider, OSRAM & Ledvance across Egypt</span>
+      </div>
+      <div class="top-banner-right">
+        <span>Showroom Hotline: <strong>+20 101 479 4281</strong></span>
+        <span>•</span>
+        <a href="#locations" style="text-decoration:underline;">Downtown Cairo Showroom</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       CISECO NAVIGATION HEADER
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#hero" class="brand-group">
+        <div class="brand-symbol">
+          <!-- GL Hexagon Glyph -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8l7 3.5-7 3.5-7-3.5 7-3.5zM4 9.1l7 3.5v7.2l-7-3.5V9.1zm9 10.7V12.6l7-3.5v7.2l-7 3.5z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Genie Light</span>
+          <span class="brand-subtitle">Commercial & Architectural</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#catalog" class="nav-item-link active">Catalog</a></li>
+          <li><a href="#categories" class="nav-item-link">Solutions</a></li>
+          <li><a href="#case-studies" class="nav-item-link">Projects <span class="nav-badge-new">Mega</span></a></li>
+          <li><a href="#brands" class="nav-item-link">Partner Brands</a></li>
+          <li><a href="#locations" class="nav-item-link">Showrooms</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Search Trigger -->
+        <button class="round-icon-btn" onclick="alert('Quick Technical Search: Enter SKU, lumens, or wattage.');" title="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+
+        <!-- Dark/Light Mode Toggle (Ciseco hallmark) -->
+        <button class="round-icon-btn" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode">
+          <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+
+        <!-- Cart Button with round badge count -->
+        <button class="round-icon-btn" onclick="alert('Persistent Cart: 0 items. Select a sub-product variation to add.');" title="Cart">
+          <span class="cart-count-badge">0</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </button>
+
+        <a href="#catalog" class="btn-pill-primary">Explore Shop</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       HERO SECTION (CISECO SOFT PASTEL BANNER)
+       ======================================================================== -->
+  <main>
+    <section id="hero" class="hero-wrap">
+      <div class="container">
+        <div class="hero-card-banner">
+          <div class="hero-decorative-moon"></div>
+          
+          <div class="hero-text-col">
+            <span class="hero-subheading">
+              <span>★</span> Engineering Lighting Solutions Since 2011
+            </span>
+            <h1 class="hero-heading">
+              Precision Light for <br>Architectural Spaces.
+            </h1>
+            <p class="hero-paragraph">
+              Official agent and premier supplier of global lighting equipment in Egypt. Explore high-performance parent luminaires with sub-product technical variations, verified PDF datasheets, and smart DALI automation.
+            </p>
+
+            <div class="hero-button-group">
+              <a href="#catalog" class="btn-pill-primary">
+                <span>Explore Catalog</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+              <a href="#case-studies" class="btn-pill-secondary">
+                <span>View National Projects</span>
+              </a>
+            </div>
+
+            <div class="hero-trust-row">
+              <div class="hero-trust-item">
+                <span class="trust-val">2011</span>
+                <span class="trust-lbl">Founded in Cairo</span>
+              </div>
+              <div class="hero-trust-item">
+                <span class="trust-val">15+</span>
+                <span class="trust-lbl">Global Brands</span>
+              </div>
+              <div class="hero-trust-item">
+                <span class="trust-val">50,000h</span>
+                <span class="trust-lbl">L90 Rated Lifespan</span>
+              </div>
+              <div class="hero-trust-item">
+                <span class="trust-val">100+</span>
+                <span class="trust-lbl">Mega Sites</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Right Spotlight Card -->
+          <div class="hero-spotlight-box">
+            <span class="spotlight-tag">Featured Luminaire</span>
+            
+            <div class="spotlight-art-stage">
+              <div class="spotlight-glow" id="hero-glow"></div>
+              <svg class="spotlight-luminaire-svg" viewBox="0 0 100 100" fill="none" stroke="var(--brand-primary)" stroke-width="3">
+                <rect x="18" y="28" width="64" height="44" rx="6" fill="rgba(var(--brand-primary-rgb), 0.12)"/>
+                <circle cx="50" cy="50" r="14" fill="#F59E0B" id="hero-core-light"/>
+                <path d="M12 50 L18 50 M82 50 L88 50 M50 18 L50 28 M50 72 L50 82"/>
+                <path d="M30 72 L24 88 M70 72 L76 88"/>
+              </svg>
+            </div>
+
+            <h3 class="spotlight-title">Philips SmartBright G3 Floodlight</h3>
+            <p class="spotlight-category">Outdoor Architectural & Facade System • IP65</p>
+
+            <div class="cct-swatches">
+              <span class="cct-swatch-label">Color Temp (CCT):</span>
+              <button class="cct-dot cct-dot-3000" title="3000K Warm White" onclick="switchHeroCCT(3000, this)"></button>
+              <button class="cct-dot cct-dot-4000 active" title="4000K Neutral White" onclick="switchHeroCCT(4000, this)"></button>
+              <button class="cct-dot cct-dot-6500" title="6500K Cool Daylight" onclick="switchHeroCCT(6500, this)"></button>
+              <span id="hero-cct-label" style="font-size:0.75rem; font-weight:700; margin-left:0.4rem;">4000K Neutral</span>
+            </div>
+
+            <div class="spotlight-footer">
+              <div>
+                <span style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Starting From</span>
+                <div class="spotlight-price">420 EGP</div>
+              </div>
+              <button class="btn-pill-primary" style="padding:0.55rem 1.25rem; font-size:0.82rem;" onclick="openSpecModal('philips-floodlight')">
+                View All Variations
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         CISECO "DISCOVER MORE" PASTEL CATEGORY CARDS
+         ======================================================================== -->
+    <section id="categories" class="categories-section">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-main-heading">Discover solutions<span>. </span><span style="color:var(--text-muted); font-weight:400;">Engineered for every space</span></h2>
+            <p class="section-desc-subtle">Browse parent luminaire families organized by architectural application</p>
+          </div>
+          <a href="#catalog" class="btn-pill-secondary">View All Categories &rarr;</a>
+        </div>
+
+        <div class="category-cards-grid">
+          <!-- Category 1 -->
+          <div class="ciseco-cat-card cat-card-1">
+            <div>
+              <span class="cat-card-badge">Commercial & Facades</span>
+              <h3 class="cat-card-title">Outdoor & <br>Floodlighting</h3>
+            </div>
+            <a href="#catalog" class="cat-card-btn">Explore 42 Models</a>
+          </div>
+
+          <!-- Category 2 -->
+          <div class="ciseco-cat-card cat-card-2">
+            <div>
+              <span class="cat-card-badge">Warehouses & Logistics</span>
+              <h3 class="cat-card-title">High Bay & <br>Industrial LED</h3>
+            </div>
+            <a href="#catalog" class="cat-card-btn">Explore 28 Models</a>
+          </div>
+
+          <!-- Category 3 -->
+          <div class="ciseco-cat-card cat-card-3">
+            <div>
+              <span class="cat-card-badge">Smart Automation</span>
+              <h3 class="cat-card-title">DALI Drivers & <br>Control Gear</h3>
+            </div>
+            <a href="#catalog" class="cat-card-btn">Explore 19 Models</a>
+          </div>
+
+          <!-- Category 4 -->
+          <div class="ciseco-cat-card cat-card-4">
+            <div>
+              <span class="cat-card-badge">Offices & Campuses</span>
+              <h3 class="cat-card-title">Architectural <br>Downlights</h3>
+            </div>
+            <a href="#catalog" class="cat-card-btn">Explore 35 Models</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         PARENT & SUB-PRODUCT TECHNICAL CATALOG SHOWCASE
+         ======================================================================== -->
+    <section id="catalog" class="products-section">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-main-heading">Product Catalog<span>. </span><span style="color:var(--text-muted); font-weight:400;">Parent & Sub-Products</span></h2>
+            <p class="section-desc-subtle">Filter by application, select technical variations, and download verified manufacturer PDF datasheets</p>
+          </div>
+        </div>
+
+        <div class="product-filter-tabs">
+          <button class="tab-pill active" onclick="filterCisecoCatalog('all', this)">All Luminaires</button>
+          <button class="tab-pill" onclick="filterCisecoCatalog('floodlight', this)">Outdoor Floodlights</button>
+          <button class="tab-pill" onclick="filterCisecoCatalog('industrial', this)">Industrial High Bays</button>
+          <button class="tab-pill" onclick="filterCisecoCatalog('controls', this)">Drivers & DALI</button>
+        </div>
+
+        <div class="ciseco-product-grid">
+          <!-- PRODUCT 1 -->
+          <div class="ciseco-product-card" data-cat="floodlight">
+            <div class="product-image-container">
+              <span class="card-badge-top-left">Philips</span>
+              <span class="card-badge-top-right">IP65</span>
+              <svg class="product-svg-icon" viewBox="0 0 100 100" fill="none" stroke="var(--text-heading)" stroke-width="2.5">
+                <rect x="20" y="30" width="60" height="40" rx="6" fill="rgba(var(--brand-primary-rgb), 0.1)"/>
+                <circle cx="50" cy="50" r="10" fill="#F59E0B"/>
+                <path d="M15 50 L20 50 M80 50 L85 50 M30 70 L25 85 M70 70 L75 85"/>
+              </svg>
+              <button class="floating-quick-btn" onclick="openSpecModal('philips-floodlight')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View Specs</span>
+              </button>
+            </div>
+
+            <div class="product-meta-row">
+              <span class="product-brand-name">Philips Lighting</span>
+              <span class="product-specs-pill">10W – 100W</span>
+            </div>
+            <h3 class="product-name-heading">Philips SmartBright All-In Floodlight</h3>
+            <p class="variant-count-line">4 Sub-Product Variations • 950 lm to 9,500 lm</p>
+
+            <div class="product-pricing-bar">
+              <div class="price-tag-wrap">
+                <span class="price-label">From</span>
+                <span class="price-num">420 EGP</span>
+              </div>
+              <button class="btn-card-datasheet" onclick="openSpecModal('philips-floodlight')">
+                <span>PDF Datasheet</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- PRODUCT 2 -->
+          <div class="ciseco-product-card" data-cat="floodlight">
+            <div class="product-image-container">
+              <span class="card-badge-top-left">Fumagalli</span>
+              <span class="card-badge-top-right">IP66</span>
+              <svg class="product-svg-icon" viewBox="0 0 100 100" fill="none" stroke="var(--text-heading)" stroke-width="2.5">
+                <path d="M35 85 L65 85 L60 40 L40 40 Z" fill="rgba(var(--brand-primary-rgb), 0.1)"/>
+                <path d="M30 40 L70 40 L50 15 Z" fill="var(--bg-surface)"/>
+                <circle cx="50" cy="55" r="7" fill="#F59E0B"/>
+              </svg>
+              <button class="floating-quick-btn" onclick="openSpecModal('fumagalli-post')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View Specs</span>
+              </button>
+            </div>
+
+            <div class="product-meta-row">
+              <span class="product-brand-name">Fumagalli Italy</span>
+              <span class="product-specs-pill">15W – 40W</span>
+            </div>
+            <h3 class="product-name-heading">Fumagalli Anti-Corrosion Resin Post</h3>
+            <p class="variant-count-line">3 Sub-Product Variations • Rust-Proof Resin</p>
+
+            <div class="product-pricing-bar">
+              <div class="price-tag-wrap">
+                <span class="price-label">From</span>
+                <span class="price-num">890 EGP</span>
+              </div>
+              <button class="btn-card-datasheet" onclick="openSpecModal('fumagalli-post')">
+                <span>PDF Datasheet</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- PRODUCT 3 -->
+          <div class="ciseco-product-card" data-cat="industrial">
+            <div class="product-image-container">
+              <span class="card-badge-top-left">Ledvance</span>
+              <span class="card-badge-top-right">IP65</span>
+              <svg class="product-svg-icon" viewBox="0 0 100 100" fill="none" stroke="var(--text-heading)" stroke-width="2.5">
+                <circle cx="50" cy="50" r="32" fill="rgba(var(--brand-primary-rgb), 0.1)"/>
+                <circle cx="50" cy="50" r="16" fill="var(--brand-primary)" fill-opacity="0.3"/>
+                <line x1="50" y1="12" x2="50" y2="18"/>
+              </svg>
+              <button class="floating-quick-btn" onclick="openSpecModal('ledvance-highbay')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View Specs</span>
+              </button>
+            </div>
+
+            <div class="product-meta-row">
+              <span class="product-brand-name">Ledvance / OSRAM</span>
+              <span class="product-specs-pill">100W – 200W</span>
+            </div>
+            <h3 class="product-name-heading">Ledvance Industrial High Bay Gen 4</h3>
+            <p class="variant-count-line">3 Sub-Product Variations • 14k to 28k Lumens</p>
+
+            <div class="product-pricing-bar">
+              <div class="price-tag-wrap">
+                <span class="price-label">From</span>
+                <span class="price-num">3,450 EGP</span>
+              </div>
+              <button class="btn-card-datasheet" onclick="openSpecModal('ledvance-highbay')">
+                <span>PDF Datasheet</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- PRODUCT 4 -->
+          <div class="ciseco-product-card" data-cat="controls">
+            <div class="product-image-container">
+              <span class="card-badge-top-left">Tridonic</span>
+              <span class="card-badge-top-right">IP20</span>
+              <svg class="product-svg-icon" viewBox="0 0 100 100" fill="none" stroke="var(--text-heading)" stroke-width="2.5">
+                <rect x="15" y="38" width="70" height="24" rx="4" fill="rgba(var(--brand-primary-rgb), 0.1)"/>
+                <circle cx="28" cy="50" r="4" fill="var(--brand-primary)"/>
+                <line x1="45" y1="46" x2="72" y2="46"/>
+                <line x1="45" y1="54" x2="65" y2="54"/>
+              </svg>
+              <button class="floating-quick-btn" onclick="openSpecModal('tridonic-dali')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Quick View Specs</span>
+              </button>
+            </div>
+
+            <div class="product-meta-row">
+              <span class="product-brand-name">Tridonic Austria</span>
+              <span class="product-specs-pill">25W – 75W</span>
+            </div>
+            <h3 class="product-name-heading">Tridonic LCA One4All DALI-2 Driver</h3>
+            <p class="variant-count-line">3 Sub-Product Variations • Digital Dimming to 1%</p>
+
+            <div class="product-pricing-bar">
+              <div class="price-tag-wrap">
+                <span class="price-label">From</span>
+                <span class="price-num">780 EGP</span>
+              </div>
+              <button class="btn-card-datasheet" onclick="openSpecModal('tridonic-dali')">
+                <span>PDF Datasheet</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         HOW IT WORKS (4 STEPS - CISECO STYLE)
+         ======================================================================== -->
+    <section class="how-it-works-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <span style="font-size:0.8rem; font-weight:700; color:var(--brand-primary); text-transform:uppercase;">Simple & Streamlined</span>
+          <h2 class="section-main-heading" style="margin-top:0.4rem;">How Genie Light Operates</h2>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-badge-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3 class="step-title">1. Filter by Specs</h3>
+            <p class="step-desc">Filter catalog items by lumens, wattage, CCT color temperature, IP ratings, and global brand.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3 class="step-title">2. Download Datasheets</h3>
+            <p class="step-desc">Inspect exact photometric curves, dimension drawings, and download verified engineering PDFs.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h3 class="step-title">3. Dynamic Delivery</h3>
+            <p class="step-desc">Direct dispatch across Egyptian governorates (Cairo, Giza, Alexandria, Canal, Upper Egypt) with calculated rates.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-badge-circle">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="step-title">4. 5-Year Warranty</h3>
+            <p class="step-desc">Manufacturer-backed operational warranty with zero reported failures on major infrastructure projects.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         NATIONAL CASE STUDIES (AIRPORTS, TUNNELS, METRO, PETROJET)
+         ======================================================================== -->
+    <section id="case-studies" class="case-studies-section">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-main-heading">Infrastructure showcase<span>. </span><span style="color:var(--text-muted); font-weight:400;">Verified deployments</span></h2>
+            <p class="section-desc-subtle">Tested under extreme real-world operating conditions across Egypt</p>
+          </div>
+          <a href="#locations" class="btn-pill-secondary">Request Project Tender &rarr;</a>
+        </div>
+
+        <!-- Featured Case Study Hero (Cairo Airport) -->
+        <div class="case-study-hero-card">
+          <div>
+            <span class="cs-tag">Aviation Infrastructure</span>
+            <h3 class="cs-title">Cairo International Airport</h3>
+            <p class="cs-desc">
+              Supplied and installed apron floodlighting systems across aircraft movement areas. Maintained ICAO uniformity ratio >0.5 with CRI >80, calibrated CCT (4000K–5000K), and smart DALI dimming backed by a 5-year warranty with zero failures.
+            </p>
+
+            <div class="cs-metrics-grid">
+              <div class="cs-metric-box">
+                <strong>> 0.5</strong>
+                <span>ICAO Uniformity</span>
+              </div>
+              <div class="cs-metric-box">
+                <strong>IP66</strong>
+                <span>Weatherproof Rating</span>
+              </div>
+              <div class="cs-metric-box">
+                <strong>0 Failures</strong>
+                <span>5-Year Track Record</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.06); border-radius:var(--radius-xl); padding:2rem; border:1px solid rgba(255,255,255,0.1);">
+            <h4 style="color:#FFFFFF; font-size:1.15rem; margin-bottom:0.75rem;">Engineered Highlights</h4>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0.65rem; font-size:0.88rem; color:#CBD5E1;">
+              <li>✓ Apron floodlighting calibrated to 4000K-5000K CCT</li>
+              <li>✓ Anti-flicker technology reducing ground crew eye fatigue</li>
+              <li>✓ LED modules certified under LM80 & TM21 standards</li>
+              <li>✓ Automated DALI dimming synced to flight traffic schedules</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sub Case Studies Grid -->
+        <div class="case-studies-subgrid">
+          <!-- Study 2: Port Said Tunnels -->
+          <div class="sub-cs-card">
+            <span class="sub-cs-sector">Transportation & Tunnels</span>
+            <h3 class="sub-cs-name">Port Said Tunnels</h3>
+            <p class="sub-cs-summary">
+              Overcame entrance luminance contrast causing driver eye strain with adaptive smart dimmers, IP66 corrosion resistance, and instant emergency backup battery systems.
+            </p>
+            <div class="sub-cs-pills">
+              <span class="sub-cs-pill">IP66 Corrosive Moisture</span>
+              <span class="sub-cs-pill">Emergency Egress</span>
+              <span class="sub-cs-pill">24/7 Duty</span>
+            </div>
+          </div>
+
+          <!-- Study 3: Cairo Metro Line 3 -->
+          <div class="sub-cs-card">
+            <span class="sub-cs-sector">Urban Transit</span>
+            <h3 class="sub-cs-name">Cairo Metro Line 3</h3>
+            <p class="sub-cs-summary">
+              Supplied vibration-proof luminaires across stations with CRI ≥80, uniform light distribution (≥0.8), and energy-efficient DALI smart controls.
+            </p>
+            <div class="sub-cs-pills">
+              <span class="sub-cs-pill">Vibration-Proof</span>
+              <span class="sub-cs-pill">Uniformity ≥ 0.8</span>
+              <span class="sub-cs-pill">L90 ≥ 50,000h</span>
+            </div>
+          </div>
+
+          <!-- Study 4: Petrojet Industrial -->
+          <div class="sub-cs-card">
+            <span class="sub-cs-sector">Oil & Gas Industrial</span>
+            <h3 class="sub-cs-name">Petrojet Industrial Complexes</h3>
+            <p class="sub-cs-summary">
+              Heavy-duty hazardous-location illumination strictly complying with ATEX & IECEx explosion-proof standards for petrochemical environments.
+            </p>
+            <div class="sub-cs-pills">
+              <span class="sub-cs-pill">ATEX Certified</span>
+              <span class="sub-cs-pill">IECEx Compliance</span>
+              <span class="sub-cs-pill">5-Year Warranty</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         OFFICIAL PARTNER BRANDS BAR
+         ======================================================================== -->
+    <section id="brands" class="brands-section">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted);">Official Authorized Distributor & Direct Factory Partner</span>
+        </div>
+        <div class="brands-grid">
+          <span class="brand-item-card">PHILIPS</span>
+          <span class="brand-item-card">SCHNEIDER ELECTRIC</span>
+          <span class="brand-item-card">OSRAM</span>
+          <span class="brand-item-card">LEDVANCE</span>
+          <span class="brand-item-card">TRIDONIC</span>
+          <span class="brand-item-card">FUMAGALLI</span>
+          <span class="brand-item-card">ELSEWEDY</span>
+          <span class="brand-item-card">OLYMPIA ELECTRONICS</span>
+          <span class="brand-item-card">TCL</span>
+          <span class="brand-item-card">EATON</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SHOWROOM & HEAD OFFICE LOCATIONS
+         ======================================================================== -->
+    <section id="locations" class="locations-section">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-main-heading">Visit our locations<span>. </span><span style="color:var(--text-muted); font-weight:400;">Downtown Cairo</span></h2>
+            <p class="section-desc-subtle">Experience architectural fixtures in person or consult with our engineering team</p>
+          </div>
+        </div>
+
+        <div class="locations-cards-grid">
+          <!-- Location 1 -->
+          <div class="loc-card">
+            <span class="loc-badge">Commercial Showroom</span>
+            <h3 class="loc-title">Downtown Cairo Showroom</h3>
+            <p class="loc-address">
+              20 El-Gomhoria Street, Downtown, Cairo, Egypt<br>
+              Interactive architectural displays, magnetic tracks & facade fixtures.
+            </p>
+            <div class="loc-detail-row">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+201014794281"><strong>+20 101 479 4281</strong></a>
+            </div>
+            <div class="loc-detail-row" style="color:var(--text-muted); font-size:0.85rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Sat – Thu: 9:00 AM – 7:00 PM</span>
+            </div>
+          </div>
+
+          <!-- Location 2 -->
+          <div class="loc-card">
+            <span class="loc-badge">Corporate Headquarters</span>
+            <h3 class="loc-title">Roshdy Street Head Office</h3>
+            <p class="loc-address">
+              40 Roshdy Street, Downtown, Cairo, Egypt<br>
+              Technical consulting, tender preparation & client contract management.
+            </p>
+            <div class="loc-detail-row">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:+201024538960"><strong>+20 102 453 8960</strong></a>
+            </div>
+            <div class="loc-detail-row" style="color:var(--text-muted); font-size:0.85rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:info@genielight-co.com">info@genielight-co.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       CISECO FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-columns-grid">
+        <div>
+          <div class="brand-group">
+            <div class="brand-symbol">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8l7 3.5-7 3.5-7-3.5 7-3.5zM4 9.1l7 3.5v7.2l-7-3.5V9.1zm9 10.7V12.6l7-3.5v7.2l-7 3.5z"/>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-title">Genie Light</span>
+              <span class="brand-subtitle">Commercial & Architectural</span>
+            </div>
+          </div>
+          <p class="footer-desc">
+            Founded in 2011. Providing high-performance lighting systems, parent/sub-product catalogs, and official brand distribution across Egypt and MENA.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Product Catalog</h4>
+          <ul class="footer-menu">
+            <li><a href="#catalog">Outdoor Floodlights</a></li>
+            <li><a href="#catalog">Industrial High Bays</a></li>
+            <li><a href="#catalog">DALI & LED Drivers</a></li>
+            <li><a href="#catalog">Emergency Lighting</a></li>
+            <li><a href="#catalog">Download Master Catalog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Case Studies</h4>
+          <ul class="footer-menu">
+            <li><a href="#case-studies">Cairo International Airport</a></li>
+            <li><a href="#case-studies">Port Said Tunnels</a></li>
+            <li><a href="#case-studies">Cairo Metro Line 3</a></li>
+            <li><a href="#case-studies">Petrojet Industrial</a></li>
+            <li><a href="#case-studies">New Alamein University</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Corporate</h4>
+          <ul class="footer-menu">
+            <li><a href="#hero">About Genie Light</a></li>
+            <li><a href="#locations">Showroom Location</a></li>
+            <li><a href="#locations">Head Office</a></li>
+            <li><a href="tel:+201014794281">Hotline Support</a></li>
+            <li><a href="mailto:info@genielight-co.com">info@genielight-co.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-legal-bar">
+        <span>&copy; 2026 Genie Light. Prepared for Eng. Ahmed Mostafa. Ciseco Next.js Edition.</span>
+        <span>Developer: Remon Hany • Full-Stack Web Application</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       INTERACTIVE QUICK VIEW SPEC MODAL
+       ======================================================================== -->
+  <div class="modal-backdrop" id="specModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header-row">
+        <div>
+          <span style="font-size:0.75rem; font-weight:700; color:var(--brand-primary); text-transform:uppercase;">Technical Variation Matrix</span>
+          <h3 id="modalProductName" style="font-size:1.35rem; margin-top:0.2rem;">Philips SmartBright G3 LED Floodlight</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeSpecModal()">&times;</button>
+      </div>
+
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+        Each parent product contains child sub-products differing by power ratings, luminous flux, and color temperatures:
+      </p>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Power</th>
+            <th>Lumens</th>
+            <th>CCT</th>
+            <th>Beam</th>
+            <th>IP</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>PH-BVP150-10W</td>
+            <td>10 W</td>
+            <td>950 lm</td>
+            <td>3000K/4000K</td>
+            <td>110°</td>
+            <td>IP65</td>
+            <td>420 EGP</td>
+            <td><button class="btn-download-pill" onclick="alert('Downloading datasheet for PH-BVP150-10W...')">PDF</button></td>
+          </tr>
+          <tr>
+            <td>PH-BVP150-20W</td>
+            <td>20 W</td>
+            <td>1,900 lm</td>
+            <td>3000K/4000K</td>
+            <td>110°</td>
+            <td>IP65</td>
+            <td>680 EGP</td>
+            <td><button class="btn-download-pill" onclick="alert('Downloading datasheet for PH-BVP150-20W...')">PDF</button></td>
+          </tr>
+          <tr>
+            <td>PH-BVP150-50W</td>
+            <td>50 W</td>
+            <td>4,750 lm</td>
+            <td>3000K/4000K</td>
+            <td>110°</td>
+            <td>IP65</td>
+            <td>1,150 EGP</td>
+            <td><button class="btn-download-pill" onclick="alert('Downloading datasheet for PH-BVP150-50W...')">PDF</button></td>
+          </tr>
+          <tr>
+            <td>PH-BVP150-100W</td>
+            <td>100 W</td>
+            <td>9,500 lm</td>
+            <td>4000K/6500K</td>
+            <td>110°</td>
+            <td>IP65</td>
+            <td>2,100 EGP</td>
+            <td><button class="btn-download-pill" onclick="alert('Downloading datasheet for PH-BVP150-100W...')">PDF</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+        <button class="btn-pill-secondary" onclick="closeSpecModal()">Close</button>
+        <button class="btn-pill-primary" onclick="alert('Requesting commercial quotation for Eng. Ahmed Mostafa...'); closeSpecModal();">Request Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT INTERACTIONS
+       ======================================================================== -->
+  <script>
+    // Dark/Light Mode Toggle (Ciseco behavior)
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('ciseco_theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        localStorage.setItem('ciseco_theme', 'dark');
+      }
+    }
+
+    // Hero CCT Swatch Switcher
+    function switchHeroCCT(kelvin, dotEl) {
+      document.querySelectorAll('.cct-dot').forEach(d => d.classList.remove('active'));
+      dotEl.classList.add('active');
+
+      const core = document.getElementById('hero-core-light');
+      const glow = document.getElementById('hero-glow');
+      const lbl = document.getElementById('hero-cct-label');
+
+      if (kelvin === 3000) {
+        core.setAttribute('fill', '#F59E0B');
+        glow.style.background = 'radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, transparent 70%)';
+        lbl.innerText = '3000K Warm White';
+      } else if (kelvin === 4000) {
+        core.setAttribute('fill', '#E2E8F0');
+        glow.style.background = 'radial-gradient(circle, rgba(0, 168, 89, 0.25) 0%, transparent 70%)';
+        lbl.innerText = '4000K Neutral White';
+      } else if (kelvin === 6500) {
+        core.setAttribute('fill', '#38BDF8');
+        glow.style.background = 'radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, transparent 70%)';
+        lbl.innerText = '6500K Cool Daylight';
+      }
+    }
+
+    // Catalog Filter Tabs
+    function filterCisecoCatalog(category, btnEl) {
+      document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+
+      const cards = document.querySelectorAll('.ciseco-product-card');
+      cards.forEach(c => {
+        if (category === 'all' || c.getAttribute('data-cat') === category) {
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    // Modal Handlers
+    function openSpecModal(productId) {
+      document.getElementById('specModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSpecModal() {
+      document.getElementById('specModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('specModal').addEventListener('click', function(e) {
+      if (e.target === this) closeSpecModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSpecModal();
+    });
+  </script>
+</body>
+</html>

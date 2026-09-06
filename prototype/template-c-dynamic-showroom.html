@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genie Light — Dynamic Showroom</title>
+  <meta name="description" content="Genie Light interactive product showroom. Explore lighting products with real-time Kelvin temperature preview, variant selection, and instant quote requests." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark: #0D1117;
+      --dark2: #161B22;
+      --dark3: #21262D;
+      --green: #00A859;
+      --green-light: #00D670;
+      --amber: #FF8C00;
+      --amber-light: #FFA500;
+      --white: #FFFFFF;
+      --bg-light: #F6F8FA;
+      --border-dark: rgba(255,255,255,0.1);
+      --border-light: #D0D7DE;
+      --text-light-muted: #656D76;
+      --text-dark-muted: rgba(255,255,255,0.55);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: white; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(13,17,23,0.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 0 48px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 200;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-light { width: 32px; height: 32px; position: relative; }
+    .logo-light-ring { width: 32px; height: 32px; border: 2px solid var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .logo-light-core { width: 10px; height: 10px; background: var(--amber); border-radius: 50%; box-shadow: 0 0 8px var(--amber); }
+    .nav-brand { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 1.05rem; color: white; }
+    .nav-brand span { color: var(--green); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text-dark-muted); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-nav-quote { background: var(--green); color: white; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 700; font-size: 0.82rem; cursor: pointer; font-family: 'Manrope', sans-serif; transition: all 0.2s; }
+    .btn-nav-quote:hover { background: var(--green-light); transform: translateY(-1px); }
+    .nav-cart { background: var(--dark3); border: 1px solid var(--border-dark); color: var(--text-dark-muted); border-radius: 8px; padding: 9px 16px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+    .nav-cart:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 100px 48px 60px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,168,89,0.12), transparent),
+                  radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255,140,0,0.08), transparent),
+                  var(--dark);
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero-glow-1 { position: absolute; top: 20%; left: 30%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,168,89,0.08), transparent 70%); pointer-events: none; }
+    .hero-glow-2 { position: absolute; bottom: 20%; right: 25%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,140,0,0.06), transparent 70%); pointer-events: none; }
+
+    .hero-inner { position: relative; z-index: 1; max-width: 900px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,168,89,0.1); border: 1px solid rgba(0,168,89,0.3);
+      border-radius: 100px; padding: 6px 18px; font-size: 0.78rem; font-weight: 700;
+      color: var(--green-light); margin-bottom: 28px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1;box-shadow:0 0 0 0 var(--green)} 50%{opacity:0.6;box-shadow:0 0 0 4px rgba(0,168,89,0)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    .hero-title {
+      font-family: 'Manrope', sans-serif; font-weight: 900;
+      font-size: clamp(3rem, 5.5vw, 5rem); line-height: 1.0; letter-spacing: -0.03em;
+      color: white; margin-bottom: 24px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero-title em { font-style: normal; color: var(--green); }
+    .hero-title .amber { color: var(--amber); }
+    .hero-sub { font-size: 1.05rem; color: var(--text-dark-muted); line-height: 1.7; max-width: 540px; margin: 0 auto 40px; animation: fadeUp 0.8s 0.2s ease both; }
+    
+    .hero-cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
+    .btn-showroom-primary {
+      background: var(--green); color: white; border: none; border-radius: 12px;
+      padding: 16px 36px; font-weight: 800; font-size: 1rem; cursor: pointer;
+      font-family: 'Manrope', sans-serif; transition: all 0.25s; display: flex; align-items: center; gap: 10px;
+    }
+    .btn-showroom-primary:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,168,89,0.3); }
+    .btn-showroom-sec {
+      background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-dark);
+      border-radius: 12px; padding: 16px 36px; font-weight: 700; font-size: 1rem; cursor: pointer;
+      font-family: 'Manrope', sans-serif; transition: all 0.25s;
+    }
+    .btn-showroom-sec:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
+
+    /* KELVIN SLIDER (interactive showpiece) */
+    .kelvin-showcase {
+      margin-top: 64px; background: var(--dark2); border-radius: 24px;
+      border: 1px solid var(--border-dark); padding: 40px;
+      max-width: 700px; margin-left: auto; margin-right: auto;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .ks-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dark-muted); margin-bottom: 16px; }
+    .ks-value { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 2.5rem; color: white; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .ks-desc { font-size: 0.85rem; color: var(--text-dark-muted); margin-bottom: 24px; }
+    .ks-slider { width: 100%; height: 8px; border-radius: 4px; outline: none; cursor: pointer; margin-bottom: 16px; }
+    .ks-marks { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-dark-muted); }
+    .ks-preview {
+      height: 60px; border-radius: 12px; margin-top: 16px;
+      transition: background 0.5s ease;
+    }
+
+    /* ── BRANDS ── */
+    .brands-strip { background: var(--dark2); border-top: 1px solid var(--border-dark); border-bottom: 1px solid var(--border-dark); padding: 20px 48px; overflow: hidden; }
+    .marquee-wrap { display: flex; gap: 48px; animation: marquee 22s linear infinite; width: max-content; }
+    .mq-brand { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--text-dark-muted); letter-spacing: 0.06em; white-space: nowrap; display: flex; align-items: center; gap: 10px; transition: color 0.2s; }
+    .mq-sep { width: 4px; height: 4px; background: var(--green); border-radius: 50%; flex-shrink: 0; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── SHOWROOM SECTION (white) ── */
+    .showroom-section { background: var(--bg-light); padding: 80px 80px; }
+    .ss-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+    .ss-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+    .ss-title { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 2.4rem; color: #0D1117; letter-spacing: -0.03em; line-height: 1.15; }
+    .ss-title em { font-style: normal; color: var(--green); }
+    .btn-ss-all { background: var(--dark); color: white; border: none; border-radius: 10px; padding: 12px 24px; font-weight: 700; font-size: 0.82rem; cursor: pointer; font-family: 'Manrope', sans-serif; transition: all 0.2s; }
+    .btn-ss-all:hover { background: var(--green); }
+
+    /* PRODUCT CARDS */
+    .prod-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .prod-card {
+      background: white; border-radius: 20px; overflow: hidden;
+      border: 1.5px solid var(--border-light); transition: all 0.3s; cursor: pointer; position: relative;
+    }
+    .prod-card:hover { border-color: var(--green); transform: translateY(-6px); box-shadow: 0 24px 48px rgba(0,168,89,0.1); }
+    .prod-img-area {
+      height: 200px; position: relative; display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .prod-img-bg { position: absolute; inset: 0; transition: background 0.5s; }
+    .prod-glow { position: absolute; border-radius: 50%; pointer-events: none; transition: all 0.5s; }
+    .prod-emoji { font-size: 2.5rem; position: relative; z-index: 1; }
+    .prod-tag-bar {
+      position: absolute; top: 12px; left: 12px; right: 12px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .prod-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.04em; }
+    .badge-new { background: var(--green); color: white; }
+    .badge-hot { background: var(--amber); color: white; }
+    .badge-atex { background: #0284C7; color: white; }
+    .wishlist-btn { background: rgba(255,255,255,0.9); border: none; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    
+    .prod-body { padding: 20px; }
+    .prod-brand { font-size: 0.68rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .prod-name { font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 0.95rem; color: #0D1117; margin-bottom: 12px; line-height: 1.3; }
+    .prod-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .prod-pill { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 100px; padding: 3px 10px; font-size: 0.68rem; font-weight: 600; color: #454D56; }
+    .prod-footer { display: flex; align-items: center; justify-content: space-between; }
+    .prod-price { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 1rem; color: #0D1117; }
+    .prod-price-from { font-size: 0.72rem; font-weight: 500; color: var(--text-light-muted); }
+    .btn-add-cart { background: var(--green); color: white; border: none; border-radius: 8px; padding: 8px 18px; font-weight: 700; font-size: 0.78rem; cursor: pointer; font-family: 'Manrope', sans-serif; transition: all 0.2s; }
+    .btn-add-cart:hover { background: #006833; transform: translateY(-1px); }
+    .btn-add-cart:hover + .prod-card { transform: translateY(-6px); }
+
+    /* VARIANT MINI SELECTOR */
+    .variant-mini { display: flex; gap: 6px; margin-bottom: 14px; }
+    .vm-btn {
+      background: var(--bg-light); border: 1.5px solid var(--border-light);
+      border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600;
+      color: #454D56; cursor: pointer; transition: all 0.15s;
+    }
+    .vm-btn:hover, .vm-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
+    .vm-btn.green.active { background: var(--green); border-color: var(--green); }
+
+    /* ── PROJECTS (dark bg) ── */
+    .projects-dark { background: var(--dark); padding: 80px; }
+    .pd-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+    .pd-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+    .pd-title { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 2.4rem; color: white; letter-spacing: -0.03em; }
+    .pd-title em { font-style: normal; color: var(--green); }
+    .btn-pd-all { background: var(--dark3); border: 1px solid var(--border-dark); color: var(--text-dark-muted); border-radius: 10px; padding: 10px 20px; font-weight: 700; font-size: 0.78rem; cursor: pointer; font-family: 'Manrope', sans-serif; transition: all 0.2s; }
+    .btn-pd-all:hover { border-color: var(--green); color: var(--green); }
+
+    .projects-carousel { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+    .proj-sc {
+      border-radius: 20px; overflow: hidden; position: relative; cursor: pointer;
+      transition: transform 0.3s; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .proj-sc:hover { transform: scale(1.02); }
+    .proj-sc-bg { position: absolute; inset: 0; }
+    .proj-sc.big .proj-sc-bg { background: linear-gradient(140deg, #0D2B1A, #0A1F0F); }
+    .proj-sc.sm1 .proj-sc-bg { background: linear-gradient(140deg, #1A1A0D, #2B1A00); }
+    .proj-sc.sm2 .proj-sc-bg { background: linear-gradient(140deg, #0A1A2B, #0D1A33); }
+    .proj-sc-dots {
+      position: absolute; inset: 0; opacity: 0.08;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .proj-sc-glow { position: absolute; width: 200px; height: 200px; border-radius: 50%; top: 30px; right: 30px; pointer-events: none; }
+    .proj-sc.big .proj-sc-glow { background: radial-gradient(circle, rgba(0,168,89,0.15), transparent); }
+    .proj-sc.sm1 .proj-sc-glow { background: radial-gradient(circle, rgba(255,140,0,0.12), transparent); }
+    .proj-sc.sm2 .proj-sc-glow { background: radial-gradient(circle, rgba(2,132,199,0.12), transparent); }
+    .proj-sc-content { position: relative; z-index: 1; padding: 24px; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%); }
+    .proj-sc-sector { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+    .proj-sc.sm1 .proj-sc-sector { color: var(--amber); }
+    .proj-sc.sm2 .proj-sc-sector { color: #38BDF8; }
+    .proj-sc-name { font-family: 'Manrope', sans-serif; font-weight: 800; color: white; font-size: 1.05rem; line-height: 1.3; margin-bottom: 6px; }
+    .proj-sc-spec { font-size: 0.75rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+    /* ── STATS ── */
+    .stats-section { background: var(--green); padding: 60px 80px; display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 3rem; color: white; letter-spacing: -0.04em; }
+    .stat-label { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-top: 6px; font-weight: 500; }
+
+    /* ── CONTACT ── */
+    .contact-section { background: var(--dark2); padding: 80px; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .ctc-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+    .ctc-title { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 2.2rem; color: white; letter-spacing: -0.03em; margin-bottom: 32px; }
+    .ctc-title em { font-style: normal; color: var(--green); }
+    .ctc-items { display: flex; flex-direction: column; gap: 20px; }
+    .ctc-item { display: flex; gap: 16px; }
+    .ctc-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,168,89,0.1); border: 1px solid rgba(0,168,89,0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .ctc-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dark-muted); margin-bottom: 4px; }
+    .ctc-val { font-size: 0.9rem; color: rgba(255,255,255,0.85); }
+
+    .ctc-form { background: var(--dark3); border-radius: 20px; padding: 36px; border: 1px solid var(--border-dark); }
+    .ctc-form-title { font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.3rem; color: white; margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dark-muted); margin-bottom: 6px; }
+    .form-input { width: 100%; background: var(--dark2); border: 1px solid var(--border-dark); border-radius: 10px; padding: 11px 14px; font-family: 'Inter', sans-serif; font-size: 0.88rem; color: white; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--green); }
+    .form-input::placeholder { color: var(--text-dark-muted); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--dark); border-top: 1px solid var(--border-dark); padding: 60px 80px 32px; }
+    .ft-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .ft-brand-name { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 1.2rem; margin-bottom: 12px; }
+    .ft-brand-name span { color: var(--green); }
+    .ft-desc { font-size: 0.82rem; color: var(--text-dark-muted); line-height: 1.7; }
+    .ft-col-h { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dark-muted); margin-bottom: 16px; }
+    .ft-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .ft-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .ft-links a:hover { color: white; }
+    .ft-bottom { border-top: 1px solid var(--border-dark); padding-top: 24px; display: flex; justify-content: space-between; }
+    .ft-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-light">
+      <div class="logo-light-ring">
+        <div class="logo-light-core"></div>
+      </div>
+    </div>
+    <span class="nav-brand">Genie<span>Light</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#showroom">Showroom</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-cart">🛒 Cart (0)</button>
+    <button class="btn-nav-quote">Get Quote</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="live-dot"></span>Egypt's #1 Lighting Showroom · Established 2011</div>
+    <h1 class="hero-title">Light Every Space<br/><em>Perfectly.</em></h1>
+    <p class="hero-sub">From Cairo International Airport to luxury hotels — explore 300+ luminaires with real-time color temperature preview. The right light for every project, instantly.</p>
+    <div class="hero-cta-row">
+      <button class="btn-showroom-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Browse Showroom
+      </button>
+      <button class="btn-showroom-sec">View Projects</button>
+    </div>
+
+    <!-- KELVIN INTERACTIVE SLIDER -->
+    <div class="kelvin-showcase">
+      <div class="ks-label">Interactive Color Temperature Preview</div>
+      <div class="ks-value" id="kelvin-value">4000K — <span style="color:#e2e8f0">Neutral White</span></div>
+      <div class="ks-desc" id="kelvin-desc">Ideal for offices, retail, and commercial spaces. CRI ≥ 90.</div>
+      <input type="range" class="ks-slider" id="kelvin-slider" min="2700" max="6500" step="100" value="4000" />
+      <div class="ks-marks">
+        <span>2700K<br/>Warm</span>
+        <span>3000K<br/>Soft</span>
+        <span>4000K<br/>Neutral</span>
+        <span>5000K<br/>Cool</span>
+        <span>6500K<br/>Daylight</span>
+      </div>
+      <div class="ks-preview" id="kelvin-preview"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS MARQUEE -->
+<div class="brands-strip" id="brands">
+  <div class="marquee-wrap">
+    <div class="mq-brand"><span class="mq-sep"></span>Philips</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Schneider Electric</div>
+    <div class="mq-brand"><span class="mq-sep"></span>OSRAM</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Ledvance</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Tridonic</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Fumagalli</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Eaton</div>
+    <div class="mq-brand"><span class="mq-sep"></span>JCC Leviton</div>
+    <div class="mq-brand"><span class="mq-sep"></span>TCL</div>
+    <div class="mq-brand"><span class="mq-sep"></span>GE Lighting</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Elsewedy Engineering</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Olympia Electronics</div>
+    <!-- Repeat for seamless loop -->
+    <div class="mq-brand"><span class="mq-sep"></span>Philips</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Schneider Electric</div>
+    <div class="mq-brand"><span class="mq-sep"></span>OSRAM</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Ledvance</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Tridonic</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Fumagalli</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Eaton</div>
+    <div class="mq-brand"><span class="mq-sep"></span>JCC Leviton</div>
+    <div class="mq-brand"><span class="mq-sep"></span>TCL</div>
+    <div class="mq-brand"><span class="mq-sep"></span>GE Lighting</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Elsewedy Engineering</div>
+    <div class="mq-brand"><span class="mq-sep"></span>Olympia Electronics</div>
+  </div>
+</div>
+
+<!-- SHOWROOM (light section) -->
+<section class="showroom-section reveal" id="showroom">
+  <div class="ss-header">
+    <div>
+      <div class="ss-tag">🏪 Live Showroom</div>
+      <h2 class="ss-title">Featured <em>Luminaires</em></h2>
+    </div>
+    <button class="btn-ss-all">Browse All 300+ Products →</button>
+  </div>
+  <div class="prod-grid">
+    <!-- Card 1 -->
+    <div class="prod-card">
+      <div class="prod-img-area">
+        <div class="prod-img-bg" style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5)"></div>
+        <div class="prod-glow" style="width:120px;height:120px;background:radial-gradient(circle,rgba(0,168,89,0.12),transparent);top:20px;left:50%;transform:translateX(-50%)"></div>
+        <div class="prod-emoji">💡</div>
+        <div class="prod-tag-bar">
+          <span class="prod-badge badge-new">New</span>
+          <button class="wishlist-btn">🤍</button>
+        </div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">Philips</div>
+        <div class="prod-name">SmartBright G3 LED Downlight</div>
+        <div class="variant-mini">
+          <button class="vm-btn active green">10W</button>
+          <button class="vm-btn">20W</button>
+          <button class="vm-btn">25W</button>
+          <button class="vm-btn">40W</button>
+        </div>
+        <div class="prod-pills">
+          <span class="prod-pill">3000K–6500K</span>
+          <span class="prod-pill">IP44</span>
+          <span class="prod-pill">CRI 90</span>
+          <span class="prod-pill">60°</span>
+        </div>
+        <div class="prod-footer">
+          <div><div class="prod-price-from">From</div><div class="prod-price">420 EGP</div></div>
+          <button class="btn-add-cart">+ Add to Quote</button>
+        </div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="prod-card">
+      <div class="prod-img-area">
+        <div class="prod-img-bg" style="background:linear-gradient(135deg,#FEF3C7,#FFF7ED)"></div>
+        <div class="prod-glow" style="width:120px;height:120px;background:radial-gradient(circle,rgba(255,140,0,0.12),transparent);top:20px;left:50%;transform:translateX(-50%)"></div>
+        <div class="prod-emoji">🔦</div>
+        <div class="prod-tag-bar">
+          <span class="prod-badge badge-hot">Hot</span>
+          <button class="wishlist-btn">🤍</button>
+        </div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">Philips</div>
+        <div class="prod-name">BVP150 LED Floodlight Series</div>
+        <div class="variant-mini">
+          <button class="vm-btn">10W</button>
+          <button class="vm-btn active green">50W</button>
+          <button class="vm-btn">100W</button>
+        </div>
+        <div class="prod-pills">
+          <span class="prod-pill">4000K–6500K</span>
+          <span class="prod-pill">IP65</span>
+          <span class="prod-pill">IK08</span>
+          <span class="prod-pill">110°</span>
+        </div>
+        <div class="prod-footer">
+          <div><div class="prod-price-from">From</div><div class="prod-price">1,150 EGP</div></div>
+          <button class="btn-add-cart">+ Add to Quote</button>
+        </div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="prod-card">
+      <div class="prod-img-area">
+        <div class="prod-img-bg" style="background:linear-gradient(135deg,#E0F2FE,#F0F9FF)"></div>
+        <div class="prod-glow" style="width:120px;height:120px;background:radial-gradient(circle,rgba(2,132,199,0.1),transparent);top:20px;left:50%;transform:translateX(-50%)"></div>
+        <div class="prod-emoji">🏭</div>
+        <div class="prod-tag-bar">
+          <span class="prod-badge badge-atex">ATEX</span>
+          <button class="wishlist-btn">🤍</button>
+        </div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">Genie Light Pro</div>
+        <div class="prod-name">Industrial High Bay — Hazardous Zone</div>
+        <div class="variant-mini">
+          <button class="vm-btn">100W</button>
+          <button class="vm-btn active green">200W</button>
+          <button class="vm-btn">400W</button>
+        </div>
+        <div class="prod-pills">
+          <span class="prod-pill">5000K</span>
+          <span class="prod-pill">IP66</span>
+          <span class="prod-pill">Zone 1/21</span>
+          <span class="prod-pill">L90&gt;50Kh</span>
+        </div>
+        <div class="prod-footer">
+          <div><div class="prod-price-from">From</div><div class="prod-price">3,200 EGP</div></div>
+          <button class="btn-add-cart">+ Add to Quote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS (dark) -->
+<section class="projects-dark reveal" id="projects">
+  <div class="pd-header">
+    <div>
+      <div class="pd-tag">🏗️ Case Studies</div>
+      <h2 class="pd-title">Egypt's Landmark <em>Projects</em></h2>
+    </div>
+    <button class="btn-pd-all">View All Projects →</button>
+  </div>
+  <div class="projects-carousel">
+    <div class="proj-sc big">
+      <div class="proj-sc-bg"></div>
+      <div class="proj-sc-dots"></div>
+      <div class="proj-sc-glow"></div>
+      <div class="proj-sc-content">
+        <div class="proj-sc-sector">Aviation · ICAO Certified</div>
+        <div class="proj-sc-name">Cairo International Airport — Terminal 2 & Apron Lighting</div>
+        <div class="proj-sc-spec">High-mast apron floodlighting · 4000K–5000K · CRI&gt;80 · Uniformity &gt;0.5 · DALI Smart Dimming · LM80/TM21 · 5yr zero-defect warranty</div>
+      </div>
+    </div>
+    <div class="proj-sc sm1">
+      <div class="proj-sc-bg"></div>
+      <div class="proj-sc-dots"></div>
+      <div class="proj-sc-glow"></div>
+      <div class="proj-sc-content">
+        <div class="proj-sc-sector">Oil & Gas · ATEX</div>
+        <div class="proj-sc-name">Petrojet Industrial Facilities</div>
+        <div class="proj-sc-spec">ATEX Zone 1/21 · L90 &gt;50,000h · IECEx · Zero defects</div>
+      </div>
+    </div>
+    <div class="proj-sc sm2">
+      <div class="proj-sc-bg"></div>
+      <div class="proj-sc-dots"></div>
+      <div class="proj-sc-glow"></div>
+      <div class="proj-sc-content">
+        <div class="proj-sc-sector">Urban Transit · 24/7</div>
+        <div class="proj-sc-name">Cairo Metro Line 3</div>
+        <div class="proj-sc-spec">Glare-free · CRI ≥80 · Uniformity ≥0.8 · DALI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Years Experience</div></div>
+  <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Projects Delivered</div></div>
+  <div class="stat-item"><div class="stat-num">300+</div><div class="stat-label">Product SKUs</div></div>
+  <div class="stat-item"><div class="stat-num">50Kh</div><div class="stat-label">L90 Warranty</div></div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="ctc-tag">📍 Get in Touch</div>
+      <h2 class="ctc-title">Visit Our<br/><em>Cairo Showrooms</em></h2>
+      <div class="ctc-items">
+        <div class="ctc-item">
+          <div class="ctc-icon">🏢</div>
+          <div><div class="ctc-label">Head Office</div><div class="ctc-val">40 Roshdy Street, Downtown Cairo, Egypt</div></div>
+        </div>
+        <div class="ctc-item">
+          <div class="ctc-icon">🏪</div>
+          <div><div class="ctc-label">Commercial Showroom</div><div class="ctc-val">20 El-Gomhoria Street, Downtown Cairo</div></div>
+        </div>
+        <div class="ctc-item">
+          <div class="ctc-icon">📞</div>
+          <div><div class="ctc-label">Phone</div><div class="ctc-val">+20 101 479 4281 &nbsp;|&nbsp; +20 102 453 8960</div></div>
+        </div>
+        <div class="ctc-item">
+          <div class="ctc-icon">✉️</div>
+          <div><div class="ctc-label">Email</div><div class="ctc-val">info@genielight-co.com</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ctc-form">
+      <div class="ctc-form-title">Request a Quote</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Name</label><input class="form-input" placeholder="Eng. Ahmed Mostafa" /></div>
+        <div class="form-group"><label class="form-label">Company</label><input class="form-input" placeholder="Your Company" /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="email@company.com" /></div>
+      <div class="form-group"><label class="form-label">Project Requirements</label><textarea class="form-input" rows="3" placeholder="Describe your lighting needs..."></textarea></div>
+      <button class="btn-showroom-primary" style="width:100%;justify-content:center;">Send Quote Request</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-brand-name">Genie<span>Light</span></div>
+      <p class="ft-desc">Egypt's premier provider of commercial, architectural, industrial, and specialized lighting since 2011. Official distributor of Philips, Schneider, OSRAM, Ledvance, Tridonic and 10+ global brands.</p>
+    </div>
+    <div>
+      <div class="ft-col-h">Products</div>
+      <ul class="ft-links">
+        <li><a href="#">Indoor Lighting</a></li>
+        <li><a href="#">Outdoor Systems</a></li>
+        <li><a href="#">Industrial</a></li>
+        <li><a href="#">Emergency</a></li>
+        <li><a href="#">Smart Controls</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Company</div>
+      <ul class="ft-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Brands</a></li>
+        <li><a href="#">Technical Docs</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Contact</div>
+      <ul class="ft-links">
+        <li><a href="#">+20 101 479 4281</a></li>
+        <li><a href="#">info@genielight-co.com</a></li>
+        <li><a href="#">genielight-co.com</a></li>
+        <li><a href="#">40 Roshdy, Cairo</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">© 2026 Genie Light. Template C — Dynamic Showroom</div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">genielight-co.com</div>
+  </div>
+</footer>
+
+<script>
+  // Kelvin slider interaction
+  const slider = document.getElementById('kelvin-slider');
+  const kelvinValue = document.getElementById('kelvin-value');
+  const kelvinDesc = document.getElementById('kelvin-desc');
+  const preview = document.getElementById('kelvin-preview');
+
+  function kelvinToColor(k) {
+    if (k <= 2700) return { bg: '#FFB347', text: '#FF8C00', name: 'Warm White', desc: 'Perfect for hospitality, residential, and luxury spaces. Cozy & relaxing. 2700K' };
+    if (k <= 3000) return { bg: '#FFD07A', text: '#FFA500', name: 'Soft White', desc: 'Great for restaurants, retail, and warm ambience. Welcoming & soft. 3000K' };
+    if (k <= 4000) return { bg: '#F5F0E0', text: '#e2e8f0', name: 'Neutral White', desc: 'Ideal for offices, retail, and commercial spaces. CRI ≥ 90. 4000K' };
+    if (k <= 5000) return { bg: '#E8F0F8', text: '#BAE6FD', name: 'Cool White', desc: 'Best for medical facilities and industrial applications. Crisp & clear. 5000K' };
+    return { bg: '#D0E8F8', text: '#7DD3FC', name: 'Daylight', desc: 'For airports, warehouses, and outdoor applications. Maximum visibility. 6500K' };
+  }
+
+  function updateKelvin() {
+    const k = parseInt(slider.value);
+    const info = kelvinToColor(k);
+    kelvinValue.innerHTML = `${k}K — <span style="color:${info.text}">${info.name}</span>`;
+    kelvinDesc.textContent = info.desc;
+    preview.style.background = `radial-gradient(ellipse at 50% 30%, ${info.bg}, rgba(255,255,255,0.05))`;
+
+    const pct = (k - 2700) / (6500 - 2700) * 100;
+    slider.style.background = `linear-gradient(90deg, #FFB347 0%, #FFD07A 20%, #F5F0E0 50%, #BAE6FD 80%, #7DD3FC 100%)`;
+  }
+
+  slider.addEventListener('input', updateKelvin);
+  updateKelvin();
+
+  // Variant buttons
+  document.querySelectorAll('.variant-mini').forEach(group => {
+    group.querySelectorAll('.vm-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.vm-btn').forEach(b => b.classList.remove('active', 'green'));
+        btn.classList.add('active', 'green');
+      });
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
