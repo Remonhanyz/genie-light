@@ -1,0 +1,31 @@
+{
+  "name": "genie-light-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:admin": "yarn workspace @genie-light/admin dev",
+    "dev:cms": "yarn workspace @genie-light/admin dev",
+    "dev:web": "yarn workspace @genie-light/web dev",
+    "build": "turbo run build",
+    "build:database": "yarn workspace @genie-light/database build",
+    "build:admin": "yarn build:database && yarn workspace @genie-light/admin build",
+    "build:web": "yarn build:database && yarn workspace @genie-light/web build",
+    "start": "turbo run start",
+    "start:admin": "yarn workspace @genie-light/admin start",
+    "start:web": "yarn workspace @genie-light/web start",
+    "db:generate": "yarn workspace @genie-light/database generate",
+    "db:push": "yarn workspace @genie-light/database push",
+    "db:seed": "yarn workspace @genie-light/database seed",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "yarn@1.22.22"
+}

@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd ../.. && yarn build:cms",
+  "installCommand": "cd ../.. && yarn install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "regions": [
+    "iad1"
+  ]
+}
