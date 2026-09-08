@@ -28,7 +28,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 RUN yarn build:database
-RUN yarn workspace cms build
+RUN yarn workspace @genie-light/cms build
 
 # Production Runner stage
 FROM base AS runner
