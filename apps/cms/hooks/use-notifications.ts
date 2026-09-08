@@ -22,12 +22,12 @@ export function useNotifications() {
 
   useEffect(() => {
     try {
-      const storedDismissed = localStorage.getItem("blasters_dismissed_notifications");
+      const storedDismissed = localStorage.getItem("genielight_dismissed_notifications");
       if (storedDismissed) {
         setDismissedIds(JSON.parse(storedDismissed));
       }
 
-      const storedReadMap = localStorage.getItem("blasters_read_timestamps");
+      const storedReadMap = localStorage.getItem("genielight_read_timestamps");
       if (storedReadMap) {
         const parsedMap: Record<string, number> = JSON.parse(storedReadMap);
         const now = Date.now();
@@ -40,16 +40,16 @@ export function useNotifications() {
         });
 
         setReadMap(cleanedMap);
-        localStorage.setItem("blasters_read_timestamps", JSON.stringify(cleanedMap));
+        localStorage.setItem("genielight_read_timestamps", JSON.stringify(cleanedMap));
       } else {
-        const oldStored = localStorage.getItem("blasters_read_notifications");
+        const oldStored = localStorage.getItem("genielight_read_notifications");
         if (oldStored) {
           const oldIds: string[] = JSON.parse(oldStored);
           const initialMap: Record<string, number> = {};
           const now = Date.now();
           oldIds.forEach((id) => { initialMap[id] = now; });
           setReadMap(initialMap);
-          localStorage.setItem("blasters_read_timestamps", JSON.stringify(initialMap));
+          localStorage.setItem("genielight_read_timestamps", JSON.stringify(initialMap));
         }
       }
     } catch (e) {
@@ -60,7 +60,7 @@ export function useNotifications() {
   const saveReadMap = (newMap: Record<string, number>) => {
     setReadMap(newMap);
     try {
-      localStorage.setItem("blasters_read_timestamps", JSON.stringify(newMap));
+      localStorage.setItem("genielight_read_timestamps", JSON.stringify(newMap));
     } catch (e) {
       console.error("Failed to save read timestamps to localStorage:", e);
     }
@@ -69,7 +69,7 @@ export function useNotifications() {
   const saveDismissedIds = (ids: string[]) => {
     setDismissedIds(ids);
     try {
-      localStorage.setItem("blasters_dismissed_notifications", JSON.stringify(ids));
+      localStorage.setItem("genielight_dismissed_notifications", JSON.stringify(ids));
     } catch (e) {
       console.error("Failed to save dismissed notifications to localStorage:", e);
     }

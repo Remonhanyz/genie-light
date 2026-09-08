@@ -105,9 +105,9 @@ export function StickerGeneratorModal({
     codes.forEach((c) => {
       html += `
         <div class="card">
-          <div class="title">BLASTERS EGYPT</div>
+          <div class="title">GENIE LIGHT EGYPT</div>
           <svg id="barcode-${c.code}"></svg>
-          <div class="product-text">${c.product?.name || "Blaster Item"}</div>
+          <div class="product-text">${c.product?.name || "Lighting Fixture"}</div>
         </div>
       `;
     });
@@ -177,7 +177,7 @@ export function StickerGeneratorModal({
                 className="border border-dashed border-default-300 dark:border-default-700 p-3 rounded-lg flex flex-col items-center justify-center bg-white text-black shadow-xs text-center"
               >
                 <div className="text-[9px] font-bold uppercase text-zinc-500 tracking-wider mb-1">
-                  BLASTERS EGYPT
+                  GENIE LIGHT EGYPT
                 </div>
                 <Barcode
                   value={c.code}
@@ -188,7 +188,7 @@ export function StickerGeneratorModal({
                   className="border-none p-0 bg-transparent"
                 />
                 <div className="text-[10px] text-zinc-600 truncate max-w-[150px] font-semibold mt-1">
-                  {c.product?.name || "Blaster Item"}
+                  {c.product?.name || "Lighting Fixture"}
                 </div>
               </div>
             ))}

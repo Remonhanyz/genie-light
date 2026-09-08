@@ -51,6 +51,6 @@
   "printed_caps": "PRINTED",
   "not_printed_caps": "NOT PRINTED",
   "generate_product_keys": "Generate Product Keys",
-  "blaster_product_bound": "Product Bound *",
+  "product_bound": "Product Bound *",
   "quantity_to_generate": "Quantity to Generate *"
 }

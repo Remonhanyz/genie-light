@@ -16,9 +16,7 @@ import {
   Package, 
   ShoppingCart, 
   ChevronDown, 
-  Loader2,
-  HelpCircle,
-  Brain
+  Loader2
 } from "lucide-react";
 import { getAdminDataLocal } from "@/lib/auth-server";
 
@@ -111,20 +109,6 @@ const ProfileInfo = ({ user }: { user: UserType }) => {
               <DropdownMenuItem className="flex items-center gap-2.5 text-sm font-medium text-default-600 rounded-lg px-3 py-2 cursor-pointer hover:bg-default-100 hover:text-default-900 focus:bg-default-100 focus:text-default-900 transition-colors">
                 <ShoppingCart className="w-4 h-4 text-default-400" />
                 Customer Orders Ledger
-              </DropdownMenuItem>
-            </Link>
-
-            <Link href="/admin/faqs" passHref>
-              <DropdownMenuItem className="flex items-center gap-2.5 text-sm font-medium text-default-600 rounded-lg px-3 py-2 cursor-pointer hover:bg-default-100 hover:text-default-900 focus:bg-default-100 focus:text-default-900 transition-colors">
-                <HelpCircle className="w-4 h-4 text-default-400" />
-                Frequently Asked FAQs
-              </DropdownMenuItem>
-            </Link>
-
-            <Link href="/admin/quiz" passHref>
-              <DropdownMenuItem className="flex items-center gap-2.5 text-sm font-medium text-default-600 rounded-lg px-3 py-2 cursor-pointer hover:bg-default-100 hover:text-default-900 focus:bg-default-100 focus:text-default-900 transition-colors">
-                <Brain className="w-4 h-4 text-default-400" />
-                Alignment Quiz Setup
               </DropdownMenuItem>
             </Link>
           </div>

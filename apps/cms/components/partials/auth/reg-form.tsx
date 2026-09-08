@@ -30,7 +30,7 @@ const RegForm = () => {
 				<Label htmlFor="email">Email</Label>
 				<Input
 					id="email"
-					placeholder="Pharaana@gmail.com"
+					placeholder="admin@genielight-co.com"
 					{...register("example")}
 					size="lg"
 				/>
@@ -40,7 +40,7 @@ const RegForm = () => {
 				<Input
 					id="password"
 					type="password"
-					placeholder="Pharaana"
+					placeholder="••••••••"
 					{...register("exampleRequired", {required: true})}
 					size="lg"
 				/>

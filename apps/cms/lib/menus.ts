@@ -102,17 +102,12 @@ export const adminMenu: MenuGroup[] = [
     ],
   },
   {
-    groupLabel: "Access & Settings",
+    groupLabel: "User Management",
     items: [
       {
         href: "/admin/users",
         label: "User Accounts",
         icon: "heroicons:users",
-      },
-      {
-        href: "/admin/settings",
-        label: "Store Settings",
-        icon: "heroicons:cog-6-tooth",
       },
     ],
   },

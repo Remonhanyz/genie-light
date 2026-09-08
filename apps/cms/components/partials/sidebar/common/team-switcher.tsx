@@ -41,24 +41,24 @@ import {useMenuHoverConfig} from "@/hooks/use-config";
 
 const groups = [
 	{
-		label: "Personal Account",
+		label: "Operations",
 		teams: [
 			{
-				label: "Designing Workspace",
-				value: "personal"
+				label: "Genie Light HQ",
+				value: "hq"
 			}
 		]
 	},
 	{
-		label: "Teams",
+		label: "Workspaces",
 		teams: [
 			{
-				label: "Core Workspace",
-				value: "acme-inc"
+				label: "Cairo Fulfillment Hub",
+				value: "cairo-hub"
 			},
 			{
-				label: "Dev.Workspace",
-				value: "monsters"
+				label: "Commercial Projects",
+				value: "commercial-projects"
 			}
 		]
 	}

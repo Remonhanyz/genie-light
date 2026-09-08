@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface Brand {
   id: string;
@@ -215,14 +216,32 @@ export default function BrandsPage() {
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-lg font-bold flex items-center gap-1.5">
-                      {brand.name}
-                    </CardTitle>
-                    <span className="text-xs font-mono text-muted-foreground">{brand.slug}</span>
+                  <div className="flex items-center gap-3">
+                    {brand.logoUrl ? (
+                      <div className="relative w-11 h-11 rounded-lg border border-border bg-white dark:bg-zinc-900 p-1 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
+                        <img
+                          src={brand.logoUrl}
+                          alt={brand.name}
+                          className="max-h-full max-w-full object-contain"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = "none";
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-11 h-11 rounded-lg border border-border bg-muted/40 flex items-center justify-center text-primary font-bold text-sm shrink-0">
+                        {brand.name.slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                    <div>
+                      <CardTitle className="text-base font-bold flex items-center gap-1.5">
+                        {brand.name}
+                      </CardTitle>
+                      <span className="text-xs font-mono text-muted-foreground">{brand.slug}</span>
+                    </div>
                   </div>
                   {brand.isOfficial && (
-                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px] gap-1">
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px] gap-1 shrink-0">
                       <CheckCircle2 className="w-3 h-3" /> Official
                     </Badge>
                   )}
@@ -289,13 +308,18 @@ export default function BrandsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="brand-logo">Logo URL / Icon Path</Label>
-              <Input
-                id="brand-logo"
-                placeholder="e.g. /images/brands/philips.svg"
-                value={form.logoUrl}
-                onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
+              <Label>Brand Logo / Manufacturer Identity</Label>
+              <ImageUpload
+                value={form.logoUrl ? [form.logoUrl] : []}
+                onChange={(urls) => setForm({ ...form, logoUrl: urls[0] || "" })}
+                disabled={saving}
+                maxFiles={1}
               />
+              {form.logoUrl && (
+                <p className="text-[11px] text-muted-foreground truncate max-w-full font-mono mt-1">
+                  {form.logoUrl}
+                </p>
+              )}
             </div>
 
             <div className="space-y-1.5">

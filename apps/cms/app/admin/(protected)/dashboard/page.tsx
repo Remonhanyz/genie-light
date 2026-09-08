@@ -46,11 +46,18 @@ export default async function DashboardPage() {
   const stats = isDataEntry
     ? [
         {
-          title: "Catalog Luminaires",
+          title: "No. of Products",
           value: products.totalProducts.toString(),
-          description: `${products.totalSubProducts} child variant SKUs in catalog`,
+          description: "Master catalog luminaire series",
           icon: Lightbulb,
           color: "text-amber-600 dark:text-amber-400 bg-amber-500/10",
+        },
+        {
+          title: "No. of Sub-Products",
+          value: products.totalSubProducts.toString(),
+          description: "Active child variant SKUs in inventory",
+          icon: Layers,
+          color: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10",
         },
         {
           title: "Lighting Categories",
@@ -90,11 +97,18 @@ export default async function DashboardPage() {
           color: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
         },
         {
-          title: "Catalog Luminaires",
+          title: "No. of Products",
           value: products.totalProducts.toString(),
-          description: `${products.totalSubProducts} child variant SKUs across ${categories.length} categories`,
+          description: "Master catalog luminaire series",
           icon: Lightbulb,
           color: "text-amber-600 dark:text-amber-400 bg-amber-500/10",
+        },
+        {
+          title: "No. of Sub-Products",
+          value: products.totalSubProducts.toString(),
+          description: `${products.outOfStockCount > 0 ? `${products.outOfStockCount} out of stock` : "Active child variant SKUs in inventory"}`,
+          icon: Layers,
+          color: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10",
         },
         {
           title: "Active Accounts",
@@ -118,7 +132,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Grid Stats cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -139,7 +153,31 @@ export default async function DashboardPage() {
       </div>
 
       {/* Operations Quick Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="border bg-card">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-base font-bold">Products & Variations</CardTitle>
+              <CardDescription>Active catalog inventory</CardDescription>
+            </div>
+            <Lightbulb className="h-5 w-5 text-amber-500" />
+          </CardHeader>
+          <CardContent className="pt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-extrabold text-foreground">{products.totalProducts}</span>
+              <span className="text-xs text-muted-foreground font-semibold">Products</span>
+              <span className="text-muted-foreground">/</span>
+              <span className="text-3xl font-extrabold text-foreground">{products.totalSubProducts}</span>
+              <span className="text-xs text-muted-foreground font-semibold">Sub-products</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {products.outOfStockCount > 0
+                ? `${products.outOfStockCount} variation SKU(s) out of stock.`
+                : "All child variation SKUs have active stock in inventory."}
+            </p>
+          </CardContent>
+        </Card>
+
         <Card className="border bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>

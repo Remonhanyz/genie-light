@@ -42,7 +42,7 @@ const LoginForm = () => {
 		resolver: zodResolver(schema),
 		mode: "all",
 		defaultValues: {
-			email: "Pharaana@codeshaper.net",
+			email: "admin@genielight-co.com",
 			password: "password"
 		}
 	});

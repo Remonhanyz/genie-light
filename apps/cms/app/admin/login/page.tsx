@@ -235,7 +235,7 @@ export default function AdminLoginPage() {
 										id="email"
 										name="email"
 										type="email"
-										placeholder="admin@blastersegy.com"
+										placeholder="admin@genielight-co.com"
 										required
 										disabled={isLoading}
 										value={formData.email}

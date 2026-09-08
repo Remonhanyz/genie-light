@@ -158,7 +158,7 @@ export default function NewProductPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 max-w-7xl mx-auto space-y-6">
+    <form onSubmit={handleSubmit} className="p-6 w-full max-w-[1600px] mx-auto space-y-6">
       {/* Top action bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
         <div className="flex items-center gap-3">
@@ -301,27 +301,6 @@ export default function NewProductPage() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Dynamic Child Variation Matrix Card */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-600" />
-                Dynamic Child Variation Matrix
-              </CardTitle>
-              <CardDescription className="text-xs">
-                Define the matrix of photometric models (Wattage, CCT, Lumens, Beam, IP) and attach manufacturer PDF datasheets.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <SubProductMatrix
-                items={subProducts}
-                onChange={setSubProducts}
-                brandCode={brandCode}
-                productSeries={name}
-              />
-            </CardContent>
-          </Card>
         </div>
 
         {/* Right 1 Column: Media & Publishing Controls */}
@@ -389,6 +368,69 @@ export default function NewProductPage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Full-Width Section: Dynamic Child Variation Matrix */}
+      <Card className="w-full">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-emerald-600" />
+            Dynamic Child Variation Matrix
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Define the matrix of photometric models (Wattage, CCT, Lumens, Beam, IP) and attach manufacturer PDF datasheets across all SKUs.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SubProductMatrix
+            items={subProducts}
+            onChange={setSubProducts}
+            brandCode={brandCode}
+            productSeries={name}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Bottom Action Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t bg-card/80 backdrop-blur-xs p-4 rounded-xl border shadow-xs">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => router.push("/admin/products")}
+          className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Catalog
+        </Button>
+
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push("/admin/products")}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 font-medium shadow-sm px-6"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Publish Product
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </form>

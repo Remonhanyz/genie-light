@@ -18,11 +18,15 @@ import {
   FileText,
   Loader2,
   Sparkles,
-  Layers,
   Filter,
+  Layers,
+  FileSpreadsheet,
+  Download,
+  UploadCloud,
 } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { BatchProductsModal } from "@/components/products/batch-products-modal";
 
 interface SubProduct {
   id: string;
@@ -64,6 +68,40 @@ export default function ProductsPage() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
+
+  // Batch Excel Import & Export
+  const [batchModalOpen, setBatchModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const params = new URLSearchParams();
+      if (selectedBrand) params.append("brandId", selectedBrand);
+      if (selectedCategory) params.append("categoryId", selectedCategory);
+      if (search) params.append("search", search);
+
+      const url = `/api/products/export${params.toString() ? `?${params.toString()}` : ""}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to export products to Excel");
+
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      const dateStr = new Date().toISOString().split("T")[0];
+      a.download = `genie-light-products-${dateStr}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+      toast.success("Excel catalog exported successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to export Excel catalog");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -143,11 +181,40 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        <Link href="/admin/products/new">
-          <Button className="gap-2 shrink-0">
-            <Plus className="h-4 w-4" /> Add New Luminaire
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setBatchModalOpen(true)}
+            className="gap-1.5 text-xs h-9 border-emerald-500/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
+            Import Excel
           </Button>
-        </Link>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={isExporting}
+            className="gap-1.5 text-xs h-9 border-border hover:bg-muted cursor-pointer"
+          >
+            {isExporting ? (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            ) : (
+              <Download className="h-4 w-4 text-muted-foreground" />
+            )}
+            Export Excel
+          </Button>
+
+          <Link href="/admin/products/new">
+            <Button size="sm" className="gap-2 shrink-0 h-9 cursor-pointer">
+              <Plus className="h-4 w-4" /> Add New Luminaire
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Filter Bar */}
@@ -261,6 +328,9 @@ export default function ProductsPage() {
                                   src={product.images[0].url}
                                   alt={product.name}
                                   className="h-full w-full object-cover"
+                                  onError={(e) => {
+                                    (e.target as HTMLElement).style.display = "none";
+                                  }}
                                 />
                               ) : (
                                 <Lightbulb className="h-5 w-5 text-muted-foreground" />
@@ -453,6 +523,12 @@ export default function ProductsPage() {
           </div>
         </Card>
       )}
+
+      <BatchProductsModal
+        open={batchModalOpen}
+        onOpenChange={setBatchModalOpen}
+        onSuccess={fetchData}
+      />
     </div>
   );
 }

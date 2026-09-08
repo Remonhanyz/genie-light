@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AutoExpandInput } from "@/components/ui/auto-expand-input";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -268,27 +269,26 @@ export function SubProductMatrix({
 
       {/* Variation Table */}
       <div className="overflow-x-auto border rounded-xl shadow-sm bg-card">
-        <table className="w-full text-xs text-left border-collapse">
+        <table className="w-max min-w-full text-xs text-left border-collapse">
           <thead>
             <tr className="bg-muted/50 border-b text-muted-foreground uppercase text-[10px] tracking-wider font-semibold">
-              <th className="p-2.5 min-w-[150px]">SKU / Model</th>
-              <th className="p-2.5 min-w-[85px]">Wattage (W)</th>
-              <th className="p-2.5 min-w-[85px]">Flux (lm)</th>
-              <th className="p-2.5 min-w-[145px]">CCT (Kelvin)</th>
-              <th className="p-2.5 min-w-[85px]">CRI</th>
-              <th className="p-2.5 min-w-[85px]">Beam</th>
-              <th className="p-2.5 min-w-[85px]">IP Rating</th>
-              <th className="p-2.5 min-w-[100px]">Price (EGP)</th>
-              <th className="p-2.5 min-w-[95px]">Sale Price</th>
-              <th className="p-2.5 min-w-[75px]">Stock</th>
-              <th className="p-2.5 min-w-[140px]">Datasheet PDF</th>
-              <th className="p-2.5 text-center min-w-[80px]">Actions</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[160px]">SKU / Model</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[75px]">Wattage (W)</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[80px]">Flux (lm)</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[95px]">CCT (Kelvin)</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[65px]">CRI</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[70px]">Beam</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[75px]">IP Rating</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[85px]">Price (EGP)</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[85px]">Sale Price</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[70px]">Stock</th>
+              <th className="p-2.5 whitespace-nowrap min-w-[110px]">Datasheet PDF</th>
+              <th className="p-2.5 whitespace-nowrap text-center min-w-[65px]">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {items.map((item, idx) => {
               const hasPdf = Boolean(item.datasheetUrl && item.datasheetUrl.trim().length > 0);
-              const selectedCct = CCT_OPTIONS.find((c) => c.value === Number(item.colorTemperature));
 
               return (
                 <tr
@@ -296,162 +296,132 @@ export function SubProductMatrix({
                   className="hover:bg-muted/30 transition-colors group"
                 >
                   {/* SKU */}
-                  <td className="p-2.5 align-middle">
-                    <div className="space-y-1">
-                      <Input
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <div className="space-y-1 flex flex-col items-start">
+                      <AutoExpandInput
                         value={item.sku}
                         onChange={(e) => handleFieldChange(idx, "sku", e.target.value)}
                         placeholder="e.g. PHI-VEN-15W-3K-IP65"
-                        className="h-8 text-xs font-mono font-medium"
+                        minChars={16}
+                        maxChars={50}
+                        className="font-mono font-medium"
                       />
-                      <Input
+                      <AutoExpandInput
                         value={item.modelNumber || ""}
                         onChange={(e) => handleFieldChange(idx, "modelNumber", e.target.value)}
                         placeholder="Opt. Model #"
+                        minChars={12}
+                        maxChars={50}
                         className="h-6 text-[10px] text-muted-foreground"
                       />
                     </div>
                   </td>
 
                   {/* Wattage */}
-                  <td className="p-2.5 align-middle">
-                    <div className="relative">
-                      <Input
-                        type="number"
-                        min="0"
-                        step="0.5"
-                        value={item.wattage ?? ""}
-                        onChange={(e) => handleFieldChange(idx, "wattage", e.target.value)}
-                        placeholder="15"
-                        className="h-8 text-xs pr-6"
-                      />
-                      <span className="absolute right-2 top-2 text-[10px] text-muted-foreground pointer-events-none">
-                        W
-                      </span>
-                    </div>
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.wattage ?? ""}
+                      onChange={(e) => handleFieldChange(idx, "wattage", e.target.value)}
+                      placeholder="15"
+                      minChars={6}
+                      maxChars={50}
+                      className="font-medium"
+                    />
                   </td>
 
                   {/* Flux */}
-                  <td className="p-2.5 align-middle">
-                    <div className="relative">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.luminousFlux ?? ""}
-                        onChange={(e) => handleFieldChange(idx, "luminousFlux", e.target.value)}
-                        placeholder="1500"
-                        className="h-8 text-xs pr-6"
-                      />
-                      <span className="absolute right-1.5 top-2 text-[10px] text-muted-foreground pointer-events-none">
-                        lm
-                      </span>
-                    </div>
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.luminousFlux ?? ""}
+                      onChange={(e) => handleFieldChange(idx, "luminousFlux", e.target.value)}
+                      placeholder="1500"
+                      minChars={7}
+                      maxChars={50}
+                      className="font-medium"
+                    />
                   </td>
 
-                  {/* CCT with Color Circle Indicator */}
-                  <td className="p-2.5 align-middle">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border shadow-xs shrink-0"
-                        style={{
-                          backgroundColor: selectedCct?.color || "#FDE68A",
-                        }}
-                        title={`${item.colorTemperature || 4000}K`}
-                      />
-                      <select
-                        value={item.colorTemperature ?? 4000}
-                        onChange={(e) =>
-                          handleFieldChange(idx, "colorTemperature", Number(e.target.value))
-                        }
-                        className="h-8 text-xs bg-background border border-input rounded-md px-2 py-1 flex-1 focus:outline-hidden focus:ring-1 focus:ring-primary"
-                      >
-                        <option value={2700}>2700K Warm</option>
-                        <option value={3000}>3000K Warm White</option>
-                        <option value={4000}>4000K Neutral White</option>
-                        <option value={5000}>5000K Day White</option>
-                        <option value={6500}>6500K Cool White</option>
-                      </select>
-                    </div>
+                  {/* CCT (Kelvin) */}
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.colorTemperature ?? ""}
+                      onChange={(e) => handleFieldChange(idx, "colorTemperature", e.target.value)}
+                      placeholder="3000K"
+                      minChars={8}
+                      maxChars={50}
+                      className="font-medium"
+                    />
                   </td>
 
                   {/* CRI */}
-                  <td className="p-2.5 align-middle">
-                    <Input
-                      type="number"
-                      min="60"
-                      max="100"
-                      value={item.cri ?? 80}
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.cri ?? ""}
                       onChange={(e) => handleFieldChange(idx, "cri", e.target.value)}
                       placeholder="80"
-                      className="h-8 text-xs"
+                      minChars={5}
+                      maxChars={50}
+                      className="font-medium"
                     />
                   </td>
 
                   {/* Beam Angle */}
-                  <td className="p-2.5 align-middle">
-                    <select
-                      value={item.beamAngle || "36°"}
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.beamAngle || ""}
                       onChange={(e) => handleFieldChange(idx, "beamAngle", e.target.value)}
-                      className="h-8 text-xs bg-background border border-input rounded-md px-2 py-1 w-full focus:outline-hidden"
-                    >
-                      {BEAM_OPTIONS.map((beam) => (
-                        <option key={beam} value={beam}>
-                          {beam}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="36°"
+                      minChars={6}
+                      maxChars={50}
+                      className="font-medium"
+                    />
                   </td>
 
                   {/* IP Rating */}
-                  <td className="p-2.5 align-middle">
-                    <select
-                      value={item.ipRating || "IP65"}
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.ipRating || ""}
                       onChange={(e) => handleFieldChange(idx, "ipRating", e.target.value)}
-                      className="h-8 text-xs bg-background border border-input rounded-md px-2 py-1 w-full focus:outline-hidden"
-                    >
-                      {IP_OPTIONS.map((ip) => (
-                        <option key={ip} value={ip}>
-                          {ip}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="IP65"
+                      minChars={6}
+                      maxChars={50}
+                      className="font-medium"
+                    />
                   </td>
 
                   {/* Price */}
-                  <td className="p-2.5 align-middle">
-                    <Input
-                      type="number"
-                      min="0"
-                      step="1"
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
                       value={item.price ?? ""}
                       onChange={(e) => handleFieldChange(idx, "price", e.target.value)}
                       placeholder="350"
-                      className="h-8 text-xs font-medium"
+                      minChars={7}
+                      maxChars={50}
+                      className="font-semibold text-foreground"
                     />
                   </td>
 
                   {/* Sale Price */}
-                  <td className="p-2.5 align-middle">
-                    <Input
-                      type="number"
-                      min="0"
-                      step="1"
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
                       value={item.discountPrice ?? ""}
                       onChange={(e) => handleFieldChange(idx, "discountPrice", e.target.value)}
-                      placeholder="Opt."
-                      className="h-8 text-xs text-muted-foreground"
+                      placeholder="Opt. Sale"
+                      minChars={7}
+                      maxChars={50}
+                      className="text-muted-foreground"
                     />
                   </td>
 
                   {/* Stock */}
-                  <td className="p-2.5 align-middle">
-                    <Input
-                      type="number"
-                      min="0"
-                      value={item.stockQuantity ?? 0}
+                  <td className="p-2.5 align-middle whitespace-nowrap">
+                    <AutoExpandInput
+                      value={item.stockQuantity ?? ""}
                       onChange={(e) => handleFieldChange(idx, "stockQuantity", e.target.value)}
-                      placeholder="0"
-                      className="h-8 text-xs text-center"
+                      placeholder="50"
+                      minChars={5}
+                      maxChars={50}
+                      className="font-medium"
                     />
                   </td>
 

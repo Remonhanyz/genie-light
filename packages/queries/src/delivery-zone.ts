@@ -23,7 +23,8 @@ export async function updateDeliveryFee(
   id: string,
   deliveryFee: number,
   estimatedDays: string,
-  active?: boolean
+  active?: boolean,
+  governorate?: string
 ) {
   return prisma.deliveryZone.update({
     where: { id },
@@ -31,7 +32,14 @@ export async function updateDeliveryFee(
       deliveryFee,
       estimatedDays,
       ...(active !== undefined ? { active } : {}),
+      ...(governorate ? { governorate } : {}),
     },
+  });
+}
+
+export async function deleteDeliveryZone(id: string) {
+  return prisma.deliveryZone.delete({
+    where: { id },
   });
 }
 

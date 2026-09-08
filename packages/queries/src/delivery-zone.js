@@ -4,6 +4,7 @@ exports.getAllDeliveryZones = getAllDeliveryZones;
 exports.getActiveDeliveryZones = getActiveDeliveryZones;
 exports.getDeliveryZoneByGovernorate = getDeliveryZoneByGovernorate;
 exports.updateDeliveryFee = updateDeliveryFee;
+exports.deleteDeliveryZone = deleteDeliveryZone;
 exports.upsertDeliveryZone = upsertDeliveryZone;
 const database_1 = require("@genie-light/database");
 async function getAllDeliveryZones() {
@@ -22,14 +23,20 @@ async function getDeliveryZoneByGovernorate(governorate) {
         where: { governorate },
     });
 }
-async function updateDeliveryFee(id, deliveryFee, estimatedDays, active) {
+async function updateDeliveryFee(id, deliveryFee, estimatedDays, active, governorate) {
     return database_1.prisma.deliveryZone.update({
         where: { id },
         data: {
             deliveryFee,
             estimatedDays,
             ...(active !== undefined ? { active } : {}),
+            ...(governorate ? { governorate } : {}),
         },
+    });
+}
+async function deleteDeliveryZone(id) {
+    return database_1.prisma.deliveryZone.delete({
+        where: { id },
     });
 }
 async function upsertDeliveryZone(data) {

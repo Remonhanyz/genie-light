@@ -20,6 +20,7 @@ interface Category {
   id: string;
   name: string;
   image?: string | null;
+  imageUrl?: string | null;
   _count?: {
     products: number;
   };
@@ -67,7 +68,7 @@ export default function CategoriesPage() {
 
   const handleOpenEdit = (category: Category) => {
     setName(category.name);
-    setImage(category.image || "");
+    setImage(category.imageUrl || category.image || "");
     setEditingId(category.id);
     setIsOpen(true);
   };
@@ -191,9 +192,9 @@ export default function CategoriesPage() {
                   return (
                     <TableRow key={c.id}>
                       <TableCell className="normal-case">
-                        {c.image ? (
+                        {c.imageUrl || c.image ? (
                           <img
-                            src={c.image}
+                            src={c.imageUrl || c.image || ""}
                             alt={c.name}
                             className="h-10 w-10 object-contain rounded bg-default-100 border border-border"
                             onError={(e) => {
@@ -265,7 +266,7 @@ export default function CategoriesPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="e.g. Gel Blasters, Tactical Accessories, Ammo"
+                  placeholder="e.g. Architectural Linear, Track Spotlights, High Bay, Downlights"
                   disabled={isSaving}
                 />
               </div>

@@ -19,7 +19,14 @@ export declare function getDeliveryZoneByGovernorate(governorate: string): Promi
     deliveryFee: import("@prisma/client/runtime/library").Decimal;
     estimatedDays: string;
 } | null>;
-export declare function updateDeliveryFee(id: string, deliveryFee: number, estimatedDays: string, active?: boolean): Promise<{
+export declare function updateDeliveryFee(id: string, deliveryFee: number, estimatedDays: string, active?: boolean, governorate?: string): Promise<{
+    id: string;
+    active: boolean;
+    governorate: string;
+    deliveryFee: import("@prisma/client/runtime/library").Decimal;
+    estimatedDays: string;
+}>;
+export declare function deleteDeliveryZone(id: string): Promise<{
     id: string;
     active: boolean;
     governorate: string;
