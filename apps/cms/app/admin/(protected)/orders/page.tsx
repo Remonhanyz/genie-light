@@ -220,12 +220,12 @@ export default function OrdersPage() {
     }
   };
 
-  const handlePrintStickers = (factionCodes: any[]) => {
-    if (!factionCodes || factionCodes.length === 0) {
+  const handlePrintStickers = (itemCodes: any[]) => {
+    if (!itemCodes || itemCodes.length === 0) {
       toast.warning("No barcodes generated for this order yet.");
       return;
     }
-    setStickerCodes(factionCodes);
+    setStickerCodes(itemCodes);
     setIsStickerOpen(true);
   };
 
@@ -350,7 +350,7 @@ export default function OrdersPage() {
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">{formatDate(o.createdAt)}</TableCell>
                     <TableCell className="flex justify-end gap-1.5 py-3">
-                      <Button size="icon" variant="outline" onClick={() => handlePrintStickers(o.factionCodes)} title="Print All Product Barcodes" className="cursor-pointer">
+                      <Button size="icon" variant="outline" onClick={() => handlePrintStickers(o.barcodes || o.items || [])} title="Print All Product Barcodes" className="cursor-pointer">
                         <Download className="h-4 w-4" />
                       </Button>
                       <Button size="icon" variant="outline" onClick={() => handleOpenDetail(o.id)} title="View Details & Barcodes" className="cursor-pointer">

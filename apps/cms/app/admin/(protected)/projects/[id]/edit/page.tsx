@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Save, Loader2, Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 type Params = { id: string };
 
@@ -17,6 +18,7 @@ export default function EditProjectPage({ params }: { params: Promise<Params> })
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -28,7 +30,6 @@ export default function EditProjectPage({ params }: { params: Promise<Params> })
     solutions: "",
     standards: "",
     featured: false,
-    imageUrls: "",
   });
 
   useEffect(() => {
@@ -48,8 +49,8 @@ export default function EditProjectPage({ params }: { params: Promise<Params> })
             solutions: data.solutions || "",
             standards: data.standards || "",
             featured: data.featured || false,
-            imageUrls: (data.images || []).map((img: any) => img.url).join("\n"),
           });
+          setImages((data.images || []).map((img: any) => img.url));
         } else {
           toast.error("Failed to load project details");
         }
@@ -66,18 +67,14 @@ export default function EditProjectPage({ params }: { params: Promise<Params> })
     e.preventDefault();
     try {
       setSaving(true);
-      const images = form.imageUrls
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .map((url, idx) => ({ url, order: idx }));
+      const imagesPayload = images.map((url, idx) => ({ url, order: idx }));
 
       const res = await fetch(`/api/projects/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          images,
+          images: imagesPayload,
         }),
       });
 
@@ -243,13 +240,16 @@ export default function EditProjectPage({ params }: { params: Promise<Params> })
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="images">Job-Site Photography URLs (One per line)</Label>
-            <textarea
-              id="images"
-              rows={3}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              value={form.imageUrls}
-              onChange={(e) => setForm({ ...form, imageUrls: e.target.value })}
+            <Label>Project Photography</Label>
+            <p className="text-xs text-muted-foreground">
+              Upload job-site photography, photometric simulations, and installed luminaire shots.
+            </p>
+            <ImageUpload
+              value={images}
+              onChange={setImages}
+              disabled={saving}
+              maxFiles={12}
+              label="Project Photos"
             />
           </div>
 

@@ -6,12 +6,15 @@ import {
 import fs from "fs/promises";
 import path from "path";
 
-const endpoint = process.env.S3_ENDPOINT;
-const region = process.env.S3_REGION || "us-east-1";
+const bucket = process.env.S3_BUCKET || "genie-light";
+const rawEndpoint = process.env.S3_ENDPOINT;
+const endpoint = rawEndpoint
+	? rawEndpoint.replace(/\/+$/, "").replace(new RegExp(`\/${bucket}$`), "")
+	: undefined;
+const region = process.env.S3_REGION || "auto";
 const accessKeyId = process.env.S3_ACCESS_KEY_ID;
 const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
-const bucket = process.env.S3_BUCKET || "blasters-products";
-const publicUrlBase = process.env.S3_PUBLIC_URL;
+const publicUrlBase = process.env.S3_PUBLIC_URL || process.env.NEXT_PUBLIC_STORAGE_BASE_URL;
 
 const isS3Configured = Boolean(
 	accessKeyId && secretAccessKey && accessKeyId !== "mock-key"
@@ -20,12 +23,11 @@ const isS3Configured = Boolean(
 export const s3Client = isS3Configured
 	? new S3Client({
 			region,
-			...(endpoint ? {endpoint} : {}),
+			...(endpoint ? { endpoint } : {}),
 			credentials: {
 				accessKeyId: accessKeyId!,
 				secretAccessKey: secretAccessKey!
-			},
-			forcePathStyle: true // Necessary for MinIO and self-hosted S3
+			}
 		})
 	: null;
 
@@ -59,7 +61,7 @@ export async function uploadToStorage(
 		try {
 			await fs.mkdir(dir, {recursive: true});
 			await fs.writeFile(path.join(dir, localFileName), buffer);
-		} catch (err) {
+		} catch {
 			// Suppress non-critical directory write failures
 		}
 	}

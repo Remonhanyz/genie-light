@@ -6,7 +6,7 @@ export declare const STORAGE_BUCKETS: {
     PROJECTS: string;
 };
 export declare function ensureBucketsExist(): Promise<void>;
-export declare function uploadFile(bucket: string, key: string, body: Buffer | Uint8Array, contentType: string): Promise<string>;
-export declare function getDownloadPresignedUrl(bucket: string, key: string, expiresIn?: number): Promise<string>;
-export declare function deleteFile(bucket: string, key: string): Promise<import("@aws-sdk/client-s3").DeleteObjectCommandOutput>;
+export declare function uploadFile(folderOrBucket: string, key: string, body: Buffer | Uint8Array, contentType: string): Promise<string>;
+export declare function getDownloadPresignedUrl(folderOrBucket: string, key: string, expiresIn?: number): Promise<string>;
+export declare function deleteFile(folderOrBucket: string, key: string): Promise<import("@aws-sdk/client-s3").DeleteObjectCommandOutput>;
 //# sourceMappingURL=minio-client.d.ts.map

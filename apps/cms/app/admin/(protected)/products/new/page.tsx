@@ -384,7 +384,7 @@ export default function NewProductPage() {
               <div className="pt-3 border-t text-[11px] text-muted-foreground flex items-start gap-2 bg-muted/20 p-3 rounded-lg">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>
-                  All created child variations will be linked to your user account for milestone audit tracking.
+                  All created child variations will be linked to your user account for catalog audit tracking.
                 </span>
               </div>
             </CardContent>

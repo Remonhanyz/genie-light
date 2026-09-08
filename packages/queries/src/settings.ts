@@ -4,7 +4,6 @@ export interface SystemSettings {
   contactEmail: string;
   contactPhone: string;
   codShippingFee?: number;
-  factionCodeFee?: number;
   maintenanceMode?: boolean;
   [key: string]: any;
 }

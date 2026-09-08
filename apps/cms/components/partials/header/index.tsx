@@ -9,7 +9,6 @@ import HorizontalMenu from "./horizontal-menu";
 import HeaderLogo from "./header-logo";
 import ThemeCustomize from "../customizer";
 import {getAdminDataLocal} from "@/lib/auth-server";
-import BatchProgressWidget from "./batch-progress-widget";
 
 const PharaanaHeader = async () => {
 	const user = await getAdminDataLocal();
@@ -23,7 +22,6 @@ const PharaanaHeader = async () => {
 					{/* <HeaderSearch /> */}
 				</div>
 				<div className="nav-tools flex items-center  md:gap-4 gap-3">
-					<BatchProgressWidget />
 					{/* <LocalSwitcher /> */}
 					<Notifications />
 					<ThemeSwitcher />

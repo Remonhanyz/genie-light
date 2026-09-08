@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("PRISMA_DATABASE_URL")
 }
 
 generator client {
@@ -30,90 +30,90 @@ enum PaymentMethod {
 }
 
 model User {
-  id                 String         @id @default(uuid())
-  email              String         @unique
-  passwordHash       String
-  name               String
-  phone              String?
-  company            String?
-  role               Role           @default(CUSTOMER)
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  
-  addresses          Address[]
-  orders             Order[]
-  cartItems          CartItem[]
-  
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  company      String?
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  addresses Address[]
+  orders    Order[]
+  cartItems CartItem[]
+
   // Data Entry Specialist & Admin Audit Relations
-  createdProducts    Product[]      @relation("ProductCreatedBy")
-  createdSubProducts SubProduct[]   @relation("SubProductCreatedBy")
+  createdProducts    Product[]    @relation("ProductCreatedBy")
+  createdSubProducts SubProduct[] @relation("SubProductCreatedBy")
 
   @@map("users")
 }
 
 model Address {
-  id            String         @id @default(uuid())
+  id            String  @id @default(uuid())
   userId        String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title         String         // e.g. "Main Office", "Job Site Alexandria"
-  governorate   String         // Egyptian Governorate
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String // e.g. "Main Office", "Job Site Alexandria"
+  governorate   String // Egyptian Governorate
   city          String
   streetAddress String
   buildingFloor String?
-  isDefault     Boolean        @default(false)
-  
-  orders        Order[]
+  isDefault     Boolean @default(false)
+
+  orders Order[]
 
   @@map("addresses")
 }
 
 model Brand {
-  id            String         @id @default(uuid())
-  name          String         @unique
-  slug          String         @unique
-  logoUrl       String?
-  description   String?
-  isOfficial    Boolean        @default(true)
-  products      Product[]
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  logoUrl     String?
+  description String?
+  isOfficial  Boolean   @default(true)
+  products    Product[]
 
   @@map("brands")
 }
 
 model Category {
-  id            String         @id @default(uuid())
-  name          String         @unique
-  slug          String         @unique
-  description   String?
-  imageUrl      String?
-  parentId      String?
-  parent        Category?      @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children      Category[]     @relation("CategoryHierarchy")
-  products      Product[]
+  id          String     @id @default(uuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  imageUrl    String?
+  parentId    String?
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
 
   @@map("categories")
 }
 
 model Product {
-  id            String         @id @default(uuid())
-  name          String
-  slug          String         @unique
-  shortDesc     String?
-  description   String         @db.Text
-  brandId       String
-  brand         Brand          @relation(fields: [brandId], references: [id])
-  categoryId    String
-  category      Category       @relation(fields: [categoryId], references: [id])
-  images        ProductImage[]
-  subProducts   SubProduct[]
-  featured      Boolean        @default(false)
-  active        Boolean        @default(true)
-  
-  // Audit & Data Entry Tracking (550 LE / 30 sub-products milestone audit)
-  createdById   String?
-  createdBy     User?          @relation("ProductCreatedBy", fields: [createdById], references: [id])
-  
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id          String         @id @default(uuid())
+  name        String
+  slug        String         @unique
+  shortDesc   String?
+  description String         @db.Text
+  brandId     String
+  brand       Brand          @relation(fields: [brandId], references: [id])
+  categoryId  String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  subProducts SubProduct[]
+  featured    Boolean        @default(false)
+  active      Boolean        @default(true)
+
+  // Audit & Data Entry Tracking
+  createdById String?
+  createdBy   User?   @relation("ProductCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([brandId])
   @@index([categoryId])
@@ -122,49 +122,49 @@ model Product {
 }
 
 model ProductImage {
-  id            String         @id @default(uuid())
-  productId     String
-  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url           String
-  alt           String?
-  order         Int            @default(0)
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  order     Int     @default(0)
 
   @@map("product_images")
 }
 
 model SubProduct {
-  id                String       @id @default(uuid())
-  productId         String
-  product           Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  sku               String       @unique
-  modelNumber       String?
-  price             Decimal      @db.Decimal(10, 2)
-  discountPrice     Decimal?     @db.Decimal(10, 2)
-  stockQuantity     Int          @default(0)
-  
-  // Photometric & Electrical Specifications
-  wattage           Float?       // Watts (e.g. 10, 20, 50, 100, 200)
-  luminousFlux      Int?         // Lumens (e.g. 950, 4750, 9500)
-  colorTemperature  Int?         // Kelvin (e.g. 3000, 4000, 6500)
-  cri               Int?         // Ra index (e.g. 80, 90)
-  beamAngle         String?      // e.g. "24°", "60°", "110°"
-  ipRating          String?      // e.g. "IP65", "IP20"
-  inputVoltage      String?      // e.g. "220-240V"
-  dimensions        String?
-  otherDetails      String?      @db.Text // Special mounting, accessories, cut-out size, warranty, notes
-  
-  datasheetUrl      String?      // MinIO object storage key or URL
-  active            Boolean      @default(true)
-  
-  // Data Entry Specialist Audit
-  createdById       String?
-  createdBy         User?        @relation("SubProductCreatedBy", fields: [createdById], references: [id])
-  
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id            String   @id @default(uuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku           String   @unique
+  modelNumber   String?
+  price         Decimal  @db.Decimal(10, 2)
+  discountPrice Decimal? @db.Decimal(10, 2)
+  stockQuantity Int      @default(0)
 
-  cartItems         CartItem[]
-  orderItems        OrderItem[]
+  // Photometric & Electrical Specifications
+  wattage          Float? // Watts (e.g. 10, 20, 50, 100, 200)
+  luminousFlux     Int? // Lumens (e.g. 950, 4750, 9500)
+  colorTemperature Int? // Kelvin (e.g. 3000, 4000, 6500)
+  cri              Int? // Ra index (e.g. 80, 90)
+  beamAngle        String? // e.g. "24°", "60°", "110°"
+  ipRating         String? // e.g. "IP65", "IP20"
+  inputVoltage     String? // e.g. "220-240V"
+  dimensions       String?
+  otherDetails     String? @db.Text // Special mounting, accessories, cut-out size, warranty, notes
+
+  datasheetUrl String? // MinIO object storage key or URL
+  active       Boolean @default(true)
+
+  // Data Entry Specialist Audit
+  createdById String?
+  createdBy   User?   @relation("SubProductCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
 
   @@index([productId])
   @@index([wattage])
@@ -176,47 +176,47 @@ model SubProduct {
 }
 
 model CartItem {
-  id            String         @id @default(uuid())
-  userId        String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subProductId  String
-  subProduct    SubProduct     @relation(fields: [subProductId], references: [id], onDelete: Cascade)
-  quantity      Int            @default(1)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subProductId String
+  subProduct   SubProduct @relation(fields: [subProductId], references: [id], onDelete: Cascade)
+  quantity     Int        @default(1)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   @@unique([userId, subProductId])
   @@map("cart_items")
 }
 
 model DeliveryZone {
-  id            String         @id @default(uuid())
-  governorate   String         @unique // e.g. "Cairo", "Giza", "Alexandria"
-  deliveryFee   Decimal        @db.Decimal(10, 2)
-  estimatedDays String         // e.g. "1-2 Days", "3-5 Days"
-  active        Boolean        @default(true)
+  id            String  @id @default(uuid())
+  governorate   String  @unique // e.g. "Cairo", "Giza", "Alexandria"
+  deliveryFee   Decimal @db.Decimal(10, 2)
+  estimatedDays String // e.g. "1-2 Days", "3-5 Days"
+  active        Boolean @default(true)
 
   @@map("delivery_zones")
 }
 
 model Order {
-  id              String         @id @default(uuid())
-  orderNumber     String         @unique
-  userId          String
-  user            User           @relation(fields: [userId], references: [id])
-  addressId       String
-  address         Address        @relation(fields: [addressId], references: [id])
-  status          OrderStatus    @default(PENDING)
-  paymentMethod   PaymentMethod  @default(COD)
-  subtotal        Decimal        @db.Decimal(10, 2)
-  deliveryFee     Decimal        @db.Decimal(10, 2)
-  total           Decimal        @db.Decimal(10, 2)
-  notes           String?
-  adminNotes      String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  
-  items           OrderItem[]
+  id            String        @id @default(uuid())
+  orderNumber   String        @unique
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  addressId     String
+  address       Address       @relation(fields: [addressId], references: [id])
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  subtotal      Decimal       @db.Decimal(10, 2)
+  deliveryFee   Decimal       @db.Decimal(10, 2)
+  total         Decimal       @db.Decimal(10, 2)
+  notes         String?
+  adminNotes    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  items OrderItem[]
 
   @@index([userId])
   @@index([status])
@@ -224,48 +224,48 @@ model Order {
 }
 
 model OrderItem {
-  id            String         @id @default(uuid())
-  orderId       String
-  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  subProductId  String
-  subProduct    SubProduct     @relation(fields: [subProductId], references: [id])
-  sku           String
-  productName   String
-  specsSummary  String         // e.g. "50W | 4000K | 4750lm | IP65"
-  unitPrice     Decimal        @db.Decimal(10, 2)
-  quantity      Int
-  totalPrice    Decimal        @db.Decimal(10, 2)
+  id           String     @id @default(uuid())
+  orderId      String
+  order        Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  subProductId String
+  subProduct   SubProduct @relation(fields: [subProductId], references: [id])
+  sku          String
+  productName  String
+  specsSummary String // e.g. "50W | 4000K | 4750lm | IP65"
+  unitPrice    Decimal    @db.Decimal(10, 2)
+  quantity     Int
+  totalPrice   Decimal    @db.Decimal(10, 2)
 
   @@map("order_items")
 }
 
 model ProjectCaseStudy {
-  id              String         @id @default(uuid())
-  title           String
-  slug            String         @unique
-  client          String         // e.g. "Cairo Airport Travel", "Petrojet"
-  sector          String         // e.g. "Aviation", "Industrial", "Transportation", "Education"
-  location        String         // e.g. "Cairo, Egypt", "Port Said, Egypt"
-  completionDate  DateTime?
-  summary         String
-  challenges      String         @db.Text
-  solutions       String         @db.Text
-  standards       String?        @db.Text // e.g. "LM80, TM21, ICAO uniformity >0.5, ATEX"
-  images          ProjectImage[]
-  featured        Boolean        @default(false)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id             String         @id @default(uuid())
+  title          String
+  slug           String         @unique
+  client         String // e.g. "Cairo Airport Travel", "Petrojet"
+  sector         String // e.g. "Aviation", "Industrial", "Transportation", "Education"
+  location       String // e.g. "Cairo, Egypt", "Port Said, Egypt"
+  completionDate DateTime?
+  summary        String
+  challenges     String         @db.Text
+  solutions      String         @db.Text
+  standards      String?        @db.Text // e.g. "LM80, TM21, ICAO uniformity >0.5, ATEX"
+  images         ProjectImage[]
+  featured       Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@map("project_case_studies")
 }
 
 model ProjectImage {
-  id              String           @id @default(uuid())
-  caseStudyId     String
-  caseStudy       ProjectCaseStudy @relation(fields: [caseStudyId], references: [id], onDelete: Cascade)
-  url             String
-  caption         String?
-  order           Int              @default(0)
+  id          String           @id @default(uuid())
+  caseStudyId String
+  caseStudy   ProjectCaseStudy @relation(fields: [caseStudyId], references: [id], onDelete: Cascade)
+  url         String
+  caption     String?
+  order       Int              @default(0)
 
   @@map("project_images")
 }

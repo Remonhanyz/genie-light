@@ -30,7 +30,6 @@ export default function UsersModerationPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState("ALL");
-  const [filterTeam, setFilterTeam] = useState("ALL");
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +39,6 @@ export default function UsersModerationPage() {
 
   const [form, setForm] = useState({
     role: "USER",
-    team: "NONE",
   });
 
   const { items: sortedUsers, requestSort, sortConfig } = useSortableData(users);
@@ -49,8 +47,7 @@ export default function UsersModerationPage() {
     setIsLoading(true);
     try {
       const roleParam = filterRole === "ALL" ? "" : `&role=${filterRole}`;
-      const teamParam = filterTeam === "ALL" ? "" : `&team=${filterTeam}`;
-      const url = `/api/users?search=${search}${roleParam}${teamParam}`;
+      const url = `/api/users?search=${search}${roleParam}`;
       const res = await fetch(url);
       const data = await res.json();
       setUsers(data);
@@ -63,13 +60,12 @@ export default function UsersModerationPage() {
 
   useEffect(() => {
     loadData();
-  }, [search, filterRole, filterTeam]);
+  }, [search, filterRole]);
 
   const handleOpenEdit = (user: any) => {
     setSelectedUser(user);
     setForm({
       role: user.role,
-      team: user.team || "NONE",
     });
     setIsOpen(true);
   };
@@ -106,7 +102,7 @@ export default function UsersModerationPage() {
       if (res.ok) {
         toast.success(
           force
-            ? "User account and all connected orders/keys deleted successfully"
+            ? "User account and all connected orders deleted successfully"
             : "User account deleted"
         );
         setDeleteId(null);
@@ -214,12 +210,6 @@ export default function UsersModerationPage() {
                   {renderSortHeader("Role", "role")}
                 </TableHead>
                 <TableHead
-                  onClick={() => requestSort("team")}
-                  className="group cursor-pointer select-none hover:bg-default-150/30 dark:hover:bg-default-800/30 transition-colors"
-                >
-                  {renderSortHeader("Faction Lock", "team")}
-                </TableHead>
-                <TableHead
                   onClick={() => requestSort("createdAt")}
                   className="group cursor-pointer select-none hover:bg-default-150/30 dark:hover:bg-default-800/30 transition-colors"
                 >
@@ -230,10 +220,10 @@ export default function UsersModerationPage() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableLoader colSpan={7} rows={5} columns={["text", "text", "text", "badge", "badge", "text", "actions"]} />
+                <TableLoader colSpan={6} rows={5} columns={["text", "text", "text", "badge", "text", "actions"]} />
               ) : sortedUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-6 text-muted-foreground normal-case">
+                  <TableCell colSpan={6} className="text-center py-6 text-muted-foreground normal-case">
                     No user accounts found matching conditions.
                   </TableCell>
                 </TableRow>
@@ -253,19 +243,6 @@ export default function UsersModerationPage() {
                       }`}>
                         {u.role}
                       </span>
-                    </TableCell>
-                    <TableCell className="normal-case">
-                      {u.team ? (
-                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                          u.team === "RED" 
-                            ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300"
-                            : "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
-                        }`}>
-                          TEAM {u.team}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">None</span>
-                      )}
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground normal-case">{formatDate(u.createdAt)}</TableCell>
                     <TableCell className="flex justify-end gap-1.5 py-3 normal-case">
@@ -321,19 +298,6 @@ export default function UsersModerationPage() {
                       <SelectItem value="USER">USER (Customer)</SelectItem>
                       <SelectItem value="CLIENT">CLIENT (Team Member)</SelectItem>
                       <SelectItem value="ADMIN">ADMIN (System Owner)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="team">Faction Lock Override</Label>
-                  <Select value={form.team} onValueChange={(val) => setForm({ ...form, team: val })}>
-                    <SelectTrigger id="team">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NONE">NO FACTION</SelectItem>
-                      <SelectItem value="RED">TEAM RED</SelectItem>
-                      <SelectItem value="BLUE">TEAM BLUE</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -398,7 +362,6 @@ export default function UsersModerationPage() {
             <ul className="list-disc list-inside text-xs space-y-1 text-muted-foreground">
               <li>The user account profile and credentials</li>
               <li>All customer orders and order line items placed by this user</li>
-              <li>All single-use faction registration keys generated for their orders</li>
             </ul>
           </div>
 

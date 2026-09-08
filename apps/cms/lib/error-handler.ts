@@ -69,7 +69,7 @@ export function handleApiError(error: unknown) {
       return NextResponse.json(
         {
           success: false,
-          error: "Cannot delete this record because it is linked to existing customer orders or faction codes. Archive it instead or use Hard Delete.",
+          error: "Cannot delete this record because it is linked to existing customer orders or products. Archive it instead or use Hard Delete.",
           type: ErrorType.CONFLICT_ERROR,
         },
         { status: 409 }

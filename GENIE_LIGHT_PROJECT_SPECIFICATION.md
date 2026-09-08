@@ -198,7 +198,7 @@ Below is the complete, production-ready `schema.prisma` representing the databas
 ```prisma
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("PRISMA_DATABASE_URL")
 }
 
 generator client {

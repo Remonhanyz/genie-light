@@ -15,7 +15,7 @@ interface OrderDetailModalProps {
   onOpenChange: (open: boolean) => void;
   order: any | null;
   onStatusChange: (orderId: string, newStatus: string) => void;
-  onPrintStickers: (factionCodes: any[]) => void;
+  onPrintStickers: (barcodes: any[]) => void;
   getStatusBadgeClass: (status: string) => string;
 }
 
@@ -86,28 +86,28 @@ export function OrderDetailModal({
             </div>
           </div>
 
-          {order.factionCodes && order.factionCodes.length > 0 && (
+          {((order.barcodes && order.barcodes.length > 0) || (order.items && order.items.length > 0)) && (
             <div className="space-y-3 border-t pt-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-semibold text-sm text-muted-foreground flex items-center gap-1.5">
                   <PackageCheck className="h-4 w-4 text-primary" />
-                  Generated Product Barcodes ({order.factionCodes.length})
+                  Generated Product Barcodes ({order.barcodes?.length || order.items?.length || 0})
                 </h4>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => onPrintStickers(order.factionCodes)}
+                  onClick={() => onPrintStickers(order.barcodes || order.items?.map((i: any) => ({ code: i.sku, product: { name: i.productName } })) || [])}
                   className="gap-1.5 h-7 text-xs font-semibold cursor-pointer"
                 >
                   <Printer className="h-3.5 w-3.5" /> Print Sticker Sheet
                 </Button>
               </div>
               <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                {order.factionCodes.map((fc: any) => (
-                  <div key={fc.id} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card shadow-xs">
+                {(order.barcodes || order.items?.map((i: any) => ({ id: i.id, code: i.sku, product: { name: i.productName } })) || []).map((fc: any) => (
+                  <div key={fc.id || fc.code} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card shadow-xs">
                     <div>
                       <div className="font-mono text-sm font-bold tracking-wider uppercase text-foreground">{fc.code}</div>
-                      <div className="text-xs text-muted-foreground truncate max-w-[200px]">{fc.product?.name || "Blaster Item"}</div>
+                      <div className="text-xs text-muted-foreground truncate max-w-[200px]">{fc.product?.name || "Product Item"}</div>
                     </div>
                     <div className="flex items-center gap-3">
                       <Barcode value={fc.code} width={1.2} height={30} displayValue={false} className="border-none p-0 bg-transparent" />

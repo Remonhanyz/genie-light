@@ -16,11 +16,10 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { codShippingFee, factionCodeFee } = body;
+    const { codShippingFee } = body;
 
     const updated = await updateSystemSettings({
       codShippingFee: codShippingFee !== undefined ? parseFloat(codShippingFee) : undefined,
-      factionCodeFee: factionCodeFee !== undefined ? parseFloat(factionCodeFee) : undefined,
     });
 
     return NextResponse.json({ success: true, settings: updated });

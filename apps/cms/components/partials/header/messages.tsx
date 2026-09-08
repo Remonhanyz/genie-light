@@ -58,7 +58,7 @@ const Messages = () => {
                                         3 min ago
                                     </div>
                                 </div>
-                                {item.hasnotifaction && (
+                                {item.hasNotification && (
                                     <div className="flex-none">
                                         <span className="h-[10px] w-[10px] bg-destructive border border-destructive-foreground dark:border-default-400 rounded-full inline-block" />
                                     </div>

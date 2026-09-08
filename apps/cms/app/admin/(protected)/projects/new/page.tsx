@@ -9,10 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Save, Loader2, Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 export default function NewProjectPage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -24,7 +26,6 @@ export default function NewProjectPage() {
     solutions: "",
     standards: "",
     featured: true,
-    imageUrls: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,18 +37,14 @@ export default function NewProjectPage() {
 
     try {
       setSaving(true);
-      const images = form.imageUrls
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .map((url, idx) => ({ url, order: idx }));
+      const imagePayload = images.map((url, idx) => ({ url, order: idx }));
 
       const res = await fetch("/api/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          images,
+          images: imagePayload,
         }),
       });
 
@@ -213,14 +210,16 @@ export default function NewProjectPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="images">Job-Site Photography URLs (One per line)</Label>
-            <textarea
-              id="images"
-              rows={3}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              placeholder="https://storage.genielight-co.com/projects/cairo-airport-apron-1.jpg&#10;https://storage.genielight-co.com/projects/cairo-airport-night-apron.jpg"
-              value={form.imageUrls}
-              onChange={(e) => setForm({ ...form, imageUrls: e.target.value })}
+            <Label>Project Photography</Label>
+            <p className="text-xs text-muted-foreground">
+              Upload job-site photography, photometric simulations, and installed luminaire shots.
+            </p>
+            <ImageUpload
+              value={images}
+              onChange={setImages}
+              disabled={saving}
+              maxFiles={12}
+              label="Project Photos"
             />
           </div>
 

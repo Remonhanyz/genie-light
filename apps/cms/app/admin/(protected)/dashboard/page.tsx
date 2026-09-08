@@ -105,35 +105,16 @@ export default async function DashboardPage() {
         },
       ];
 
-  const currentBatch = products.totalSubProducts % 30;
-  const completedBatches = Math.floor(products.totalSubProducts / 30);
-  const milestonePercent = Math.min(100, Math.round((currentBatch / 30) * 100));
-
   return (
     <div className="space-y-8">
       {/* Welcome Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Genie Light Operations Dashboard
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            Centralized management console for architectural luminaires, photometric specs, and fulfillment.
-          </p>
-        </div>
-
-        {/* Milestone Badge in header */}
-        <div className="p-3 bg-card border rounded-xl shadow-xs flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg text-primary">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-xs text-muted-foreground font-medium">Data Entry Milestone</div>
-            <div className="text-sm font-bold text-foreground">
-              Batch: {currentBatch} / 30 <span className="text-xs text-muted-foreground font-normal">({milestonePercent}%)</span>
-            </div>
-          </div>
-        </div>
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">
+          Genie Light Operations Dashboard
+        </h2>
+        <p className="text-muted-foreground mt-1">
+          Centralized management console for architectural luminaires, photometric specs, and fulfillment.
+        </p>
       </div>
 
       {/* Grid Stats cards */}
@@ -187,39 +168,21 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {!isDataEntry ? (
-          <Card className="border bg-card">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div>
-                <CardTitle className="text-base font-bold">Egyptian Shipping Zones</CardTitle>
-                <CardDescription>Governorate rates & delivery days</CardDescription>
-              </div>
-              <Truck className="h-5 w-5 text-blue-500" />
-            </CardHeader>
-            <CardContent className="pt-2">
-              <div className="text-3xl font-extrabold text-foreground">{zones.length}</div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Active shipping coverage across Greater Cairo, Delta, Canal, and Upper Egypt.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="border bg-card">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div>
-                <CardTitle className="text-base font-bold">Milestone Earnings</CardTitle>
-                <CardDescription>550 LE per 30 sub-products</CardDescription>
-              </div>
-              <Layers className="h-5 w-5 text-emerald-500" />
-            </CardHeader>
-            <CardContent className="pt-2">
-              <div className="text-3xl font-extrabold text-foreground">{completedBatches} <span className="text-sm font-medium text-muted-foreground">Batches Completed</span></div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Total milestone bonuses achieved: <strong className="text-emerald-600 dark:text-emerald-400">{completedBatches * 550} EGP</strong>. {30 - currentBatch} variations left until next 550 EGP milestone!
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <Card className="border bg-card">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-base font-bold">Egyptian Shipping Zones</CardTitle>
+              <CardDescription>Governorate rates & delivery days</CardDescription>
+            </div>
+            <Truck className="h-5 w-5 text-blue-500" />
+          </CardHeader>
+          <CardContent className="pt-2">
+            <div className="text-3xl font-extrabold text-foreground">{zones.length}</div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Active shipping coverage across Greater Cairo, Delta, Canal, and Upper Egypt.
+            </p>
+          </CardContent>
+        </Card>
 
         <Card className="border bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -241,8 +204,6 @@ export default async function DashboardPage() {
       {/* Visual Analytics Section (Admin only) */}
       {!isDataEntry && (
         <DashboardCharts
-          redScore={0}
-          blueScore={0}
           salesTrend={salesTrend.map((s) => ({ day: s.day, revenue: s.sales }))}
         />
       )}

@@ -83,15 +83,20 @@ async function updateCaseStudy(id, data) {
             .replace(/[^\w\s-]/g, "")
             .replace(/\s+/g, "-");
     }
-    if (data.images && data.images.length > 0) {
+    if (data.images) {
         await database_1.prisma.projectImage.deleteMany({ where: { caseStudyId: id } });
-        updateData.images = {
-            create: data.images.map((img, idx) => ({
-                url: img.url,
-                caption: img.caption || null,
-                order: img.order ?? idx,
-            })),
-        };
+        if (data.images.length > 0) {
+            updateData.images = {
+                create: data.images.map((img, idx) => ({
+                    url: img.url,
+                    caption: img.caption || null,
+                    order: img.order ?? idx,
+                })),
+            };
+        }
+        else {
+            delete updateData.images;
+        }
     }
     return database_1.prisma.projectCaseStudy.update({
         where: { id },

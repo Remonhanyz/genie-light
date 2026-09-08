@@ -7,62 +7,80 @@ exports.getDownloadPresignedUrl = getDownloadPresignedUrl;
 exports.deleteFile = deleteFile;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
-const endpoint = process.env.MINIO_ENDPOINT || "localhost";
-const port = process.env.MINIO_PORT ? parseInt(process.env.MINIO_PORT, 10) : 9000;
-const useSSL = process.env.MINIO_USE_SSL === "true";
-const accessKeyId = process.env.MINIO_ROOT_USER || "genie_minio";
-const secretAccessKey = process.env.MINIO_ROOT_PASSWORD || "genie_minio_password";
+const targetBucket = process.env.S3_BUCKET || "genie-light";
+const rawEndpoint = process.env.S3_ENDPOINT;
+const cleanEndpoint = rawEndpoint
+    ? rawEndpoint.replace(/\/+$/, "").replace(new RegExp(`\/${targetBucket}$`), "")
+    : process.env.MINIO_ENDPOINT
+        ? `${process.env.MINIO_USE_SSL === "true" ? "https" : "http"}://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT || 9000}`
+        : undefined;
+const region = process.env.S3_REGION || "auto";
+const accessKeyId = process.env.S3_ACCESS_KEY_ID || process.env.MINIO_ROOT_USER || "genie_minio";
+const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || process.env.MINIO_ROOT_PASSWORD || "genie_minio_password";
 exports.s3Client = new client_s3_1.S3Client({
-    endpoint: `${useSSL ? "https" : "http"}://${endpoint}:${port}`,
-    region: "us-east-1",
+    region,
+    ...(cleanEndpoint ? { endpoint: cleanEndpoint } : {}),
     credentials: {
         accessKeyId,
         secretAccessKey,
     },
-    forcePathStyle: true, // Necessary for MinIO
+    // If explicitly connecting to local MinIO host, enable forcePathStyle
+    ...(cleanEndpoint && cleanEndpoint.includes("localhost") ? { forcePathStyle: true } : {}),
 });
 exports.STORAGE_BUCKETS = {
-    DATASHEETS: process.env.MINIO_BUCKET_DATASHEETS || "genie-datasheets",
-    PRODUCTS: process.env.MINIO_BUCKET_PRODUCTS || "genie-products",
-    PROJECTS: process.env.MINIO_BUCKET_PROJECTS || "genie-projects",
+    DATASHEETS: process.env.S3_PREFIX_DATASHEETS || "datasheets",
+    PRODUCTS: process.env.S3_PREFIX_PRODUCTS || "products",
+    PROJECTS: process.env.S3_PREFIX_PROJECTS || "projects",
 };
 async function ensureBucketsExist() {
-    for (const bucket of Object.values(exports.STORAGE_BUCKETS)) {
+    try {
+        await exports.s3Client.send(new client_s3_1.HeadBucketCommand({ Bucket: targetBucket }));
+    }
+    catch {
         try {
-            await exports.s3Client.send(new client_s3_1.HeadBucketCommand({ Bucket: bucket }));
+            await exports.s3Client.send(new client_s3_1.CreateBucketCommand({ Bucket: targetBucket }));
+            console.log(`🪣 Created bucket: ${targetBucket}`);
         }
-        catch {
-            try {
-                await exports.s3Client.send(new client_s3_1.CreateBucketCommand({ Bucket: bucket }));
-                console.log(`🪣 Created bucket: ${bucket}`);
-            }
-            catch (err) {
-                console.error(`Error ensuring bucket ${bucket}:`, err);
-            }
+        catch (err) {
+            console.warn(`Could not create bucket ${targetBucket} (may already exist or managed remotely):`, err);
         }
     }
 }
-async function uploadFile(bucket, key, body, contentType) {
+function resolveObjectKey(folderOrBucket, key) {
+    if (!folderOrBucket || folderOrBucket === targetBucket) {
+        return key;
+    }
+    return key.startsWith(`${folderOrBucket}/`) ? key : `${folderOrBucket}/${key}`;
+}
+async function uploadFile(folderOrBucket, key, body, contentType) {
+    const objectKey = resolveObjectKey(folderOrBucket, key);
     const command = new client_s3_1.PutObjectCommand({
-        Bucket: bucket,
-        Key: key,
+        Bucket: targetBucket,
+        Key: objectKey,
         Body: body,
         ContentType: contentType,
     });
     await exports.s3Client.send(command);
-    return `${process.env.NEXT_PUBLIC_STORAGE_BASE_URL || `http://${endpoint}:${port}`}/${bucket}/${key}`;
+    const publicBase = process.env.S3_PUBLIC_URL || process.env.NEXT_PUBLIC_STORAGE_BASE_URL;
+    if (publicBase) {
+        const cleanBase = publicBase.replace(/\/+$/, "");
+        return `${cleanBase}/${objectKey}`;
+    }
+    return `/${objectKey}`;
 }
-async function getDownloadPresignedUrl(bucket, key, expiresIn = 3600) {
+async function getDownloadPresignedUrl(folderOrBucket, key, expiresIn = 3600) {
+    const objectKey = resolveObjectKey(folderOrBucket, key);
     const command = new client_s3_1.GetObjectCommand({
-        Bucket: bucket,
-        Key: key,
+        Bucket: targetBucket,
+        Key: objectKey,
     });
     return (0, s3_request_presigner_1.getSignedUrl)(exports.s3Client, command, { expiresIn });
 }
-async function deleteFile(bucket, key) {
+async function deleteFile(folderOrBucket, key) {
+    const objectKey = resolveObjectKey(folderOrBucket, key);
     const command = new client_s3_1.DeleteObjectCommand({
-        Bucket: bucket,
-        Key: key,
+        Bucket: targetBucket,
+        Key: objectKey,
     });
     return exports.s3Client.send(command);
 }

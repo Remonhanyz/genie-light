@@ -11,9 +11,16 @@ interface ImageUploadProps {
   onChange: (urls: string[]) => void;
   disabled?: boolean;
   maxFiles?: number;
+  label?: string;
 }
 
-export function ImageUpload({ value = [], onChange, disabled, maxFiles = 10 }: ImageUploadProps) {
+export function ImageUpload({
+  value = [],
+  onChange,
+  disabled,
+  maxFiles = 10,
+  label,
+}: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,7 +138,7 @@ export function ImageUpload({ value = [], onChange, disabled, maxFiles = 10 }: I
         {isUploading ? (
           <div className="flex flex-col items-center gap-2 py-3 text-muted-foreground">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm font-medium">Uploading product images to storage...</p>
+            <p className="text-sm font-medium">Uploading images to storage...</p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 py-2 text-center">
@@ -154,7 +161,7 @@ export function ImageUpload({ value = [], onChange, disabled, maxFiles = 10 }: I
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Product Images ({value.length} / {maxFiles})
+              {label || "Images"} ({value.length} / {maxFiles})
             </span>
             <span className="text-xs text-muted-foreground italic">
               First image will be used as primary thumbnail

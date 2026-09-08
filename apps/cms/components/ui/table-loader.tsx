@@ -56,7 +56,7 @@ function getDefaultColumns(colSpan: number): ColumnSkeletonType[] {
       return ["avatar", "badge", "badge", "number", "text", "text", "actions"];
     case 8: // Coupons (Code, Discount, Type, Min, Max, Used, Status, Actions)
       return ["code", "badge", "text", "number", "number", "number", "badge", "actions"];
-    case 9: // Faction Keys (Checkbox, Code, Barcode, Product, Order, Used, Printed, Date, Actions)
+    case 9: // Product Barcodes (Checkbox, Code, Barcode, Product, Order, Used, Printed, Date, Actions)
       return ["checkbox", "code", "barcode", "text", "badge", "badge", "badge", "text", "actions"];
     default: {
       const cols: ColumnSkeletonType[] = [];

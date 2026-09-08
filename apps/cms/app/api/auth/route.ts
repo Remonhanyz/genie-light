@@ -108,8 +108,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const cleanEmail = email.trim();
+    const user = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: cleanEmail,
+          mode: "insensitive",
+        },
+      },
     });
 
     if (!user || (user.role !== Role.ADMIN && user.role !== Role.DATA_ENTRY)) {
